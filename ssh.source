@@ -18,7 +18,7 @@ remotemessage() {
 socrates() {
 	while :; do
 		echo "Connected @ `date`" >> /tmp/socrates.log
-		./auto_login.expect
+		~/bash_global/auto_login.expect
 		echo -en "\rReconnect?[y]"
 		read -n 1 -t 3 answer
 		[ "$answer" = "n" ] && break
