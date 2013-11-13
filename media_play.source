@@ -1,0 +1,89 @@
+#!/bin/bash
+
+playRate(){
+  if [ $# != 1 ];then
+    echo -e "playRate <dir>\n"
+  else
+
+#  IFS=$'\n\t'  # seperate globs using , not spaces
+
+  # folds
+  amazdir=/home/user/MyDocs/Ignore/amazing/
+  gooddir=/home/user/MyDocs/Ignore/good/
+  baddir=/home/user/MyDocs/Ignore/delete/
+  flashdir=/home/user/MyDocs/Ignore/ffplay/
+  mehdir=/home/user/MyDocs/Ignore/meh/
+  
+  mkdir -p $gooddir $baddir $flashdir $mehdir $amazdir
+
+  fold=$1
+
+  for file in $fold/*; do
+     newname=$(basename $(echo $file\
+ | sed 's/ /_/g' | sed 's/(/_/g' | sed 's/)/_/g' ))
+
+     echo $newname
+     ext=$(echo $file | awk -F "." '{print $NF}')
+
+     if [ "$ext" = "jpg" ]\
+ || [ "$ext" = "png" ];then 
+        comix "$file"
+     elif [ "$ext" = "rar" ]\
+ || [ "$ext" = "zip" ]\
+ || [ "$ext" = "cbr" ]\
+ || [ "$ext" = "cbz" ];then
+        cbrpager "$file"
+     elif [ "$ext" = "gif" ];then
+        absname=$(python -c \
+"from os.path import abspath as ap; print ap(\"$file\");")
+        opera "$absname"
+     else
+        mplayer -fs "$file"
+     fi
+
+     prompt=""
+     while [ "$prompt" = "" ];do
+       echo -en "Good/Bad/Amaze/Meh/Flash/Skip (gbamfs):" 
+       read prompt;
+       if [ "$prompt" = "s" ]; then
+         break
+       elif [ "$prompt" = "g" ]; then
+         mv "$file" $gooddir/$newname
+       elif [ "$prompt" = "a" ]; then
+         mv "$file" $amazdir/$newname
+       elif [ "$prompt" = "b" ]; then
+         mv "$file" $baddir/$newname
+       elif [ "$prompt" = "m" ]; then
+         mv "$file" $mehdir/$newname
+       elif [ "$prompt" = "f" ]; then
+# This should be optional
+         ffplay "$file"
+         mv "$file" $flashdir/$newname
+       else
+         prompt=""
+       fi
+     done
+  done
+ 
+  unset $IFS
+
+  fi
+}
+
+
+lastTouched() {
+  if [ $# != 2 ];then
+    echo -e "lastTouched <program> <directory>\n" >&2
+  else
+     prog=$1
+
+     files=$(ls $2/* -lt -c | awk '{print $NF}')
+     for file in $files; do
+        $prog $file
+     done
+  fi
+}
+
+lastComics() {
+  lastTouched cbrpager /home/user/MyDocs/Ignore/zips
+}

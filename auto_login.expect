@@ -1,0 +1,49 @@
+#!/usr/bin/expect -f
+
+# Connect 20 minutes at a time
+# Destination tends to close connection
+set timeout 1200
+
+spawn ssh -R 1943:localhost:22 zcapdd1@socrates.ucl.ac.uk
+send_user "connecting...\n"
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+#   login with keys (first time verification)
+expect {
+  "> " { }
+  "$ " { }
+  "assword: " { 
+        send "H3y!Bab\n" 
+        expect {
+          "% " { }
+          "$ " { }
+        }
+  }
+  "(yes/no)? " { 
+        send "yes\n"
+        expect {
+          "% " { }
+          "$ " { }
+        }
+  }
+  default {
+        send_user "Login failed\n"
+        exit
+  }
+}
+
+expect {
+	"%" {}
+	timeout { exit }
+	eof { exit }
+}
+
+#send "echo hi\n"
+#expect "%" {}
+#send "sleep 2\n"
+#expect "%" {}
+#send "exit\n"
+#send_user "\nobs\n"
+exit

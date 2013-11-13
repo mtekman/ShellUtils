@@ -1,0 +1,86 @@
+## FFMPEG ##################################################
+
+# constants
+donekey="_OUT"  # This means that this vid has already been 
+                # processed and can be skipped from further selection
+
+max_width=500   # max allowed width for playing nominally on N900
+container=mkv   # Holds virtually any stream 
+encoder=libx264   # Codec compatible with N900
+
+
+vidsize() {
+  ffprobe $1 2>&1 | grep Video: | awk -F ", " '{print $3}' | awk '{print $1}'
+}
+vidaspect(){
+  echo $(python -c "w_h=\"`vidsize $1`\".split('x'); print float(w_h[0])/float(w_h[1]);")
+}
+vidheight() {
+  echo $(vidsize $1) | awk -F "x" '{print $2}'
+}
+vidwidth() {
+   echo $(vidsize $1) | awk -F "x" '{print $1}'
+}
+vidrate() {
+   ffprobe $1 2>&1 | grep Video: | awk -F ", " '{print $5}' | awk '{print $1}'
+}
+videnc() {
+   ffprobe $1 2>&1\
+ | grep Video:\
+ | awk -F ", " '{print $1}'\
+ | awk -F "Video: " '{print $NF}' | awk '{print $1}'
+}
+
+vidCalcHeight() {
+   width=$1;ratio=$2;
+   echo $(python -c "h=int(float($width)/float($ratio)); h= (h+1) if (h%2!=0) else h; print h;")
+} #returns a height divisible by 2 (h264 requirement)
+
+encexists() {
+    encoder=$1
+    ffprobe -encoders 2>&1 | grep $encoder | tail -1 | wc -w
+}
+
+toNokia() {
+  if [ $# = 2 ]; then
+    file=$1
+    outfile=$2/$( echo `basename $file` | awk -F "." -v k=$donekey '{print $(NF-1)k}' )
+
+#    rate=$(vidrate $file)
+    
+    width=$(vidwidth $file)
+    aspect=$(vidaspect $file)
+    height=$(vidCalcHeight $max_width $aspect)
+
+    if [ $width -gt $max_width ]; then
+        avconv -i $file -s $max_width"x"$height -an -q:v 0 -c:v $encoder $rat $outfile"."$container
+        
+    else
+       echo "Skip: $outfile, width=$width, moving to $2"
+       mv $1 $2/
+    fi
+  else
+    echo "Give file and output folder!"
+  fi
+}
+
+
+convertAll() {
+   if [ $# != 1 ]; then
+      echo -e "$bldred Give a folder name! $txtrst" >&2
+   else
+     folder=$1
+     mkdir -p $folder
+ 
+     # Pack all images
+     zip $RANDOM".zip" *.png *.jpg
+     for file in *.zip *.rar; do
+         mv $file $folder/ 2>/dev/null
+     done
+
+     # Convert all vids
+     for file in $(ls | grep -v $donekey | egrep "(.3gp|.flv|.mpg|.mp4|.wmv|.mkv|.avi)");do
+         toNokia $file $folder
+     done
+   fi
+}

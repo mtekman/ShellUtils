@@ -1,0 +1,27 @@
+#### ssh display commands
+remotethis() {
+   if [ $# -lt 2 ];then
+	echo "`basename $0` <user@host> <[commands]>" >&2
+   else
+	ssh $1 "DISPLAY=:0 ${@:2}";
+   fi
+}
+
+remotemessage() {
+   host=$1
+   title=$2
+   message=$3
+   remotethis $1 "notify-send \"$title\" \"$message\""
+}
+
+
+socrates() {
+	while :; do
+		echo "Connected @ `date`" >> /tmp/socrates.log
+		./auto_login.expect
+		echo -en "\rReconnect?[y]"
+		read -n 1 -t 3 answer
+		[ "$answer" = "n" ] && break
+	done
+	echo -en "\rTERMINATED     \n"
+}

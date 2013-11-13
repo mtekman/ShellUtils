@@ -1,0 +1,21 @@
+#Development
+devel="/home/tetris/Desktop/Journal"
+devfold=$devel/`date +%Y_%m_%d`
+
+
+lastdate() {
+	date --date=@$(( $(date +%s) - (24*60*60*$1) )) +%Y_%m_%d
+}
+
+
+findlastdev() { 
+	ind=1;
+	while [ ! -d $devel/`lastdate $ind` ]; do
+		ind=$(( $ind + 1 ));
+	done;
+	echo $ind;
+}
+
+alias lastdev='cd $devel/$(lastdate `findlastdev`);'
+alias newdev='mkdir -p $devfold; cd $devfold;'
+
