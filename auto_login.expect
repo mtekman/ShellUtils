@@ -15,7 +15,7 @@ expect {
   "> " { }
   "$ " { }
   "assword: " { 
-        send "H3y!Bab\n" 
+        send "J0nnhy's\n" 
         expect {
           "% " { }
           "$ " { }
@@ -26,6 +26,13 @@ expect {
         expect {
           "% " { }
           "$ " { }
+          "assword: " { 
+             send "J0nnhy's\n" 
+             expect {
+               "% " { }
+               "$ " { }
+             }
+          }
         }
   }
   default {
