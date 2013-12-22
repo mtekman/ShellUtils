@@ -1,4 +1,5 @@
 #!/bin/bash
+ignoredir=/home/user/MyDocs/.ignore/
 
 playRate(){
   if [ $# != 1 ];then
@@ -8,11 +9,12 @@ playRate(){
 #  IFS=$'\n\t'  # seperate globs using , not spaces
 
   # folds
-  amazdir=/home/user/MyDocs/Ignore/amazing/
-  gooddir=/home/user/MyDocs/Ignore/good/
-  baddir=/home/user/MyDocs/Ignore/delete/
-  flashdir=/home/user/MyDocs/Ignore/ffplay/
-  mehdir=/home/user/MyDocs/Ignore/meh/
+
+  amazdir=$ignoredir/amazing/
+  gooddir=$ignoredir/good/
+  baddir=$ignoredir/delete/
+  flashdir=$ignoredir/ffplay/
+  mehdir=$ignoredir/meh/
   
   mkdir -p $gooddir $baddir $flashdir $mehdir $amazdir
 
@@ -85,5 +87,5 @@ lastTouched() {
 }
 
 lastComics() {
-  lastTouched cbrpager /home/user/MyDocs/Ignore/zips
+  lastTouched cbrpager $ignoredir/zips
 }

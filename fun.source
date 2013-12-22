@@ -1,3 +1,4 @@
+#!/bin/bash
 
 function fuck() {
   if [ $# = 0 ]; then
@@ -8,6 +9,8 @@ function fuck() {
      echo "time, place, position...?"
   elif [ "$1" = "your" ]; then
      echo fuck $* too
+  else
+     echo "$*" too
   fi
 }
 
