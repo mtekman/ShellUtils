@@ -1,0 +1,6 @@
+#
+#  Git update scripts
+#
+
+alias gpu="git push -u"
+alias gpuom=gpu" origin master"
