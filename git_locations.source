@@ -11,7 +11,8 @@ for loc in ${!loc_array[*]}; do
 #	echo $loc;
 	if [ "$loc" = "$host" ]; then
 		export git_loc="${loc_array[$loc]}"
-#		echo $git_loc;
 		break
 	fi
 done
+
+alias cdpers="cd $git_loc"

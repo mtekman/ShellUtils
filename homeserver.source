@@ -1,0 +1,22 @@
+
+
+function backyard(){
+   expect $git_loc/bash_global/login_backyard.expect
+}
+
+function backyardcam(){
+
+ssh yabanci@alist.crabdance.com "\
+ gst-launch v4l2src device=/dev/video0\
+ ! 'video/x-raw-yuv,width=640,height=480,framerate=30/1'\
+ ! ffmpegcolorspace\
+ ! videoflip method="rotate-180"\
+ ! jpegenc quality=25\
+ ! filesink location=/dev/stdout"\
+   | gst-launch filesrc location=/dev/stdin\
+     ! jpegdec\
+     ! xvimagesink
+
+}
+
+export -f backyardcam
