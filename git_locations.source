@@ -4,6 +4,8 @@
 # List of git mounts across systems
 declare -A loc_array
 loc_array[shiroe]=/home/user/MyDocs/personal_scripts/
+loc_array[yamato]=/nomansland/REPOS/personal/
+
 
 host=$(hostname)
 
