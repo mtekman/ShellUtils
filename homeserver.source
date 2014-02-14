@@ -5,7 +5,7 @@ function backyard(){
 }
 
 function backyardcam(){
-qual=25
+qual=75
 frame=30
 
 if [ "$1" != "" ];then	qual=$1; fi
@@ -13,14 +13,14 @@ if [ "$2" != "" ];then	frame=$2; fi
 
 ssh yabanci@alist.crabdance.com "\
  gst-launch v4l2src device=/dev/video0\
- ! 'video/x-raw-yuv,width=640,height=480,framerate=$frame/1'\
- ! ffmpegcolorspace\
- ! videoflip method="rotate-180"\
- ! jpegenc quality=$qual\
- ! filesink location=/dev/stdout"\
-   | gst-launch filesrc location=/dev/stdin\
-     ! jpegdec\
-     ! xvimagesink
+  ! video/x-raw-yuv,width=640,height=480,framerate=$frame/1\
+  ! autovideoconvert\
+  ! jpegenc quality=$qual\
+  ! filesink location=/dev/stdout"\
+ | gst-launch filesrc location=/dev/stdin\
+  ! jpegdec\
+  ! xvimagesink
+#  ! videoflip method='rotate-180'\
 
 }
 
