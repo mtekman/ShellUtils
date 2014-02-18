@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 function backyard(){
    expect $git_loc/bash_global/login_backyard.expect
