@@ -4,16 +4,37 @@ function backyard(){
    expect $git_loc/bash_global/login_backyard.expect
 }
 
+function workcam(){
+qual=75
+frame=25
+
+if [ "$1" != "" ];then	qual=$1; fi
+if [ "$2" != "" ];then	frame=$2; fi
+
+ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t memo@localhost -p 1943 "\
+ gst-launch v4l2src device=/dev/video0 \
+  ! video/x-raw-yuv,height=240,framerate=$frame/1\
+  ! autovideoconvert\
+  ! jpegenc quality=$qual\
+  ! filesink location=/dev/stdout"\
+ | gst-launch filesrc location=/dev/stdin\
+  ! jpegdec\
+  ! xvimagesink
+}
+
+export -f workcam
+
+
 function backyardcam(){
 qual=75
-frame=30
+frame=25
 
 if [ "$1" != "" ];then	qual=$1; fi
 if [ "$2" != "" ];then	frame=$2; fi
 
 ssh yabanci@alist.crabdance.com "\
- gst-launch v4l2src device=/dev/video0\
-  ! video/x-raw-yuv,width=640,height=480,framerate=$frame/1\
+ gst-launch v4l2src device=/dev/video0 \
+  ! video/x-raw-yuv,height=240,framerate=$frame/1\
   ! autovideoconvert\
   ! jpegenc quality=$qual\
   ! filesink location=/dev/stdout"\
