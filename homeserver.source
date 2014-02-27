@@ -11,17 +11,24 @@ frame=25
 if [ "$1" != "" ];then	qual=$1; fi
 if [ "$2" != "" ];then	frame=$2; fi
 
-ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t memo@localhost -p 1943 "\
- gst-launch v4l2src device=/dev/video0 \
+#ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t memo@localhost -p 1943 "\
+# gst-launch v4l2src device=/dev/video0 \
+#  ! video/x-raw-yuv,height=240,framerate=$frame/1\
+#  ! autovideoconvert\
+#  ! jpegenc quality=$qual\
+#  ! filesink location=/dev/stdout"\
+# | gst-launch filesrc location=/dev/stdin\
+#  ! jpegdec\
+#  ! xvimagesink
+#}
+
+ssh -A -t zcapdd1@socrates.ucl.ac.uk -X\
+ ssh -A -t memo@localhost -p 1943 -X "\
+  gst-launch v4l2src device=/dev/video0 \
   ! video/x-raw-yuv,height=240,framerate=$frame/1\
   ! autovideoconvert\
-  ! jpegenc quality=$qual\
-  ! filesink location=/dev/stdout"\
- | gst-launch filesrc location=/dev/stdin\
-  ! jpegdec\
-  ! xvimagesink
+  ! autovideosink"
 }
-
 export -f workcam
 
 
