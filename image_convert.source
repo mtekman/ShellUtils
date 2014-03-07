@@ -1,0 +1,50 @@
+
+function gifRegions(){
+	movie_file=$1
+	time_file=$2 		# file with list of time sequences wanted from the movie
+	out_fold=$3  		# where to place gifs
+	raw_fold=$out_fold/raw	# where to store extracted imgs
+
+	mkdir -p $raw_fold
+
+	counter=0
+	while read line; do
+		counter=$(( $counter + 1 ))
+
+		time1=$(echo $line | awk -F"-" '{print $1}')
+		time2=$(echo $line | awk -F"-" '{print $2}')
+		
+		[ "$time1" = "" ] && continue;
+		[ "$time2" = "" ] && continue;
+
+		diff=$(echo "$time2 - time$1" | bc )
+
+		prefixed=$raw_fold/$counter
+		mov2img $movie_fold $prefixed $time1 $diff
+
+		
+}
+
+
+function mov2img(){
+	mov=$1
+	outfix=$2
+
+	dirout=$(dirname $outfix)
+	mkdir -p $dirout
+
+	seek="-ss $3"
+	duration="-t $4"
+
+	ffmpeg $seek $duration -i $mov "$outfix%05d.png"
+}
+
+
+function converter(){
+	inp_prefix=$1
+	outfile=$2
+	delay="-delay 1x"$3
+
+	convert -coalesce -layers OptimizeTransparency $delay $inp_prefix"*.png" 
+
+}
