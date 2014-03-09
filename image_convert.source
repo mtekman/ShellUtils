@@ -21,8 +21,7 @@ function gifRegions(){
 
 		prefixed=$raw_fold/$counter
 		mov2img $movie_fold $prefixed $time1 $diff
-
-		
+	done	
 }
 
 
