@@ -15,7 +15,7 @@ remotemessage() {
 }
 
 
-socrates() {
+socratInit() {
 	while :; do
 		echo "Connected @ `date`" >> /tmp/socrates.log
 		$git_loc/bash_global/login_socrates.expect
