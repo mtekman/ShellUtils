@@ -4,6 +4,9 @@ function backyard(){
    expect $git_loc/bash_global/login_backyard.expect
 }
 
+
+alias workssh="ssh -A -t zcapdd1@socrates.ucl.ac.uk -X ssh -A -t memo@localhost -p 1943 -X"
+
 function workcam(){
 qual=75
 frame=25
@@ -22,8 +25,7 @@ if [ "$2" != "" ];then	frame=$2; fi
 #  ! xvimagesink
 #}
 
-ssh -A -t zcapdd1@socrates.ucl.ac.uk -X\
- ssh -A -t memo@localhost -p 1943 -X "\
+workssh "\
   gst-launch v4l2src device=/dev/video0 \
   ! video/x-raw-yuv,height=240,framerate=$frame/1\
   ! autovideoconvert\
