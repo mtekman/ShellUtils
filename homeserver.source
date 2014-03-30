@@ -1,11 +1,34 @@
 #!/bin/bash
 
+socrates="zcapdd1@socrates.ucl.ac.uk"
+alias workssh="ssh -A -t $socrates -X ssh -A -t memo@localhost -p 1943 -X"
+
+
+function workscpTo(){
+# scp -P 1943 git.source memo@zcapdd1@socrates.ucl.ac.uk:~/Desktop/test.txt
+	file=$1
+	destfold=$2
+#	bfile=$(basename $file)
+
+	scp $file $socrates:~/$destfold
+	ssh $socrates "scp  memo@localhost:$destfold/ -P 1943"
+}
+
+function workscpFrom(){
+	destfile=$1
+	homefile=$2
+
+	ssh $socrates "scp memo@localhost:$destfile -P 1943 ./tmp.file"
+	scp $socrates:~/tmp.file $homefile
+}
+
+
+
 function backyard(){
    expect $git_loc/bash_global/login_backyard.expect
 }
 
 
-alias workssh="ssh -A -t zcapdd1@socrates.ucl.ac.uk -X ssh -A -t memo@localhost -p 1943 -X"
 
 function workcam(){
 qual=75
