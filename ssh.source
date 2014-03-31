@@ -25,3 +25,14 @@ socratInit() {
 	done
 	echo -en "\rTERMINATED     \n"
 }
+
+evInit() {
+	while :; do
+		echo "Connected @ `date`" >> /tmp/ev.log
+		$git_loc/bash_global/login_ev.expect
+		echo -en "\rReconnect?[y]"
+		read -n 1 -t 3 answer
+		[ "$answer" = "n" ] && break
+	done
+	echo -en "\rTERMINATED     \n"
+}
