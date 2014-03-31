@@ -3,6 +3,27 @@
 socrates="zcapdd1@socrates.ucl.ac.uk"
 alias workssh="ssh -A -t $socrates -X ssh -A -t memo@localhost -p 1943 -X"
 
+ev="yabanci@alist.crabdance.com"
+alias evssh="ssh -A -t $ev -X ssh -A -t memo@localhost -p 1943 -X"
+
+
+function evscpTo () {
+	[ $# -lt 2 ] && exit
+	files="${@:2:$#}"
+	dest="${$#}"
+
+	scp -o ProxyCommand="ssh $ev nc memo@localhost 1943" $files memo@localhost:$dest
+}
+
+
+function evscpFrom(){
+	[ $# -lt 2 ] && exit
+	filereg=$1
+	destfold=$2
+
+	scp -o ProxyCommand="ssh $ev nc memo@localhost 1943" memo@localhost:$filereg $destfold
+}
+
 
 function workscpTo(){
 # scp -P 1943 git.source memo@zcapdd1@socrates.ucl.ac.uk:~/Desktop/test.txt
