@@ -3,16 +3,17 @@
 socrates="zcapdd1@socrates.ucl.ac.uk"
 alias workssh="ssh -A -t $socrates -X ssh -A -t memo@localhost -p 1943 -X"
 
+
 ev="yabanci@alist.crabdance.com"
-alias evssh="ssh -A -t $ev -X ssh -A -t memo@localhost -p 1943 -X"
+alias evssh="ssh -A -t $ev -X ssh -A -t memo@localhost -p 1947 -X"  # PORT!
 
 
 function evscpTo () {
-	[ $# -lt 2 ] && exit
-	files="${@:2:$#}"
-	dest="${$#}"
+	[ $# != 2 ] && exit
+	files=$1
+	dest=$2
 
-	scp -o ProxyCommand="ssh $ev nc memo@localhost 1943" $files memo@localhost:$dest
+	scp -P 1947 -o ProxyCommand="ssh $ev nc -w 1 127.0.0.1 1947" $files memo@localhost:$dest
 }
 
 
