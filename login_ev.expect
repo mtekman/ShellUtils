@@ -4,7 +4,7 @@
 # Destination tends to close connection
 set timeout 1200
 
-spawn ssh -R 1943:localhost:22 yabanci@alist.crabdance.com
+spawn ssh -R 1947:localhost:22 yabanci@alist.crabdance.com
 send_user "connecting...\n"
 
 #login handles cases:
@@ -14,25 +14,18 @@ send_user "connecting...\n"
 expect {
   "> " { }
   "$ " { }
-  "assword: " { 
-        send "yabanci\n" 
-        expect {
-          "% " { }
-          "$ " { }
-        }
+  "assword: " { send "yabanci\n" 
+#       expect {
+#          default { }
+#       }
   }
   "(yes/no)? " { 
         send "yes\n"
         expect {
-          "% " { }
-          "$ " { }
-          "assword: " { 
-             send "yabanci\n" 
-             expect {
-               "% " { }
-               "$ " { }
-             }
-          }
+            "assword: " { 
+#               send "yabanci\n" 
+#               expect { default { } }
+#            }
         }
   }
   default {
@@ -42,7 +35,6 @@ expect {
 }
 
 expect {
-	"%" {}
 	timeout { exit }
 	eof { exit }
 }
