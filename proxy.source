@@ -1,0 +1,19 @@
+export http_proxy=""
+
+getProxy() {
+	proxy_file=/var/tmp/proxies.html
+
+	wget --proxy=off http://free-proxy-list.net/uk-proxy.html -O $proxy_file -q
+	cat $proxy_file\
+ | egrep "<tr><td>.*</td></tr>"\
+ | grep -v "transparent"\
+ | sed "s/<\/td><td>/:/g"\
+ | egrep "no:(no|yes)"\
+ | egrep -o "[0-9.]+:80(80){0,1}"\
+ | head -1
+}
+
+setProxy() {
+	http_proxy=$(getProxy)
+	echo "Proxy set to: $http_proxy" >&2
+}
