@@ -1,19 +1,59 @@
+# Script to set proxy for http and wget
+
 export http_proxy=""
 
-getProxy() {
+export -f getProxies
+getProxies() {
 	proxy_file=/var/tmp/proxies.html
-
 	wget --proxy=off http://free-proxy-list.net/uk-proxy.html -O $proxy_file -q
+
 	cat $proxy_file\
  | egrep "<tr><td>.*</td></tr>"\
  | grep -v "transparent"\
  | sed "s/<\/td><td>/:/g"\
- | egrep "no:(no|yes)"\
- | egrep -o "[0-9.]+:80(80){0,1}"\
- | head -1
+ | egrep -o "[0-9.]+:[0-9]*(80)[0-9]*"
+# | egrep -o "[0-9.]+:[0-9]+"
+# | egrep "no:(no|yes)"
 }
 
-setProxy() {
-	http_proxy=$(getProxy)
-	echo "Proxy set to: $http_proxy" >&2
+export -f testProxSpeed
+testProxSpeed() {
+	prox=$1
+	url=$(echo $prox | awk -F":" '{print $1}')
+	port=$(echo $prox | awk -F":" '{print $2}')
+
+	#time
+	echo $(nmap -p $port $url | grep "scanned" | egrep -o "[0-9]+\.[0-9]+")
+}
+
+export -f chooseProxy
+chooseProxy() {
+	proxies="$(getProxies)"
+	num_lines=$(echo "$proxies" | wc -l)
+
+	count=0
+	
+	choice_count=-1
+	min_time=99999.99
+
+	for prox in $proxies; do
+		count=$(( $count + 1 ))
+
+		time=$(testProxSpeed $prox)
+		if [ 	`echo "$time*100000" | bc | xargs printf "%1.0f"`\
+			 -lt\
+			`echo "$min_time*100000" | bc | xargs printf "%1.0f"` ]; then
+			min_time=$time
+			choice_count=$count
+		fi
+		echo -e "$count:\t$prox \t@$time s"
+	done;
+
+	echo -n "Choose proxy [default=$choice_count]: "
+	read -n 1 ans;
+	[ "$ans" = "" ] && ans=$choice_count
+
+	choice=$(echo "$proxies" | head -"$ans" | tail -1)
+	http_proxy=$choice
+	echo -e "\rProxy set to: $http_proxy" >&2
 }
