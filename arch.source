@@ -1,0 +1,15 @@
+
+if [ "$hostname" = "shiroe" ]; then
+
+archmount() {
+
+mount /dev/mmcblk1p2 /archroot
+mount --bind /dev /archroot/dev
+mount --bind /sys /archroot/sys
+mount --bind /proc /archroot/proc
+cp /etc/resolv.conf /archroot/etc/resolv.conf
+chroot /archroot "/usr/bin/bash"
+
+}
+
+fi
