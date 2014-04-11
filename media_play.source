@@ -82,6 +82,7 @@ lastTouched() {
      files=$(ls $2/* -lt -c | awk '{print $NF}')
      for file in $files; do
         $prog $file
+	echo "$(basename $file)" >&2
      done
   fi
 }
