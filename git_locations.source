@@ -6,8 +6,8 @@ declare -A loc_array
 loc_array[shiroe]=/home/user/MyDocs/personal_scripts/
 loc_array[yamato]=/nomansland/REPOS/personal/
 loc_array[tower]=/nomansland/REPOS/personal/
-loc_array[pythagoras]=/home/memo/Documents/personal_scripts/
-loc_array[memo-PowerEdge-R710]=/home/memo/Documents/personal_scripts/
+loc_array[pythagoras]=/home/rfh/Documents/personal_scripts/
+loc_array[memo-PowerEdge-R710]=/home/rfh/Documents/personal_scripts/
 
 host=$(hostname)
 
