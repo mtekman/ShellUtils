@@ -1,11 +1,13 @@
 #!/bin/bash
 
 socrates="zcapdd1@socrates.ucl.ac.uk"
-alias workssh="ssh -A -t $socrates -X ssh -A -t memo@localhost -p 1943 -X"
+soc_login="rfh@localhost"
 
+alias workssh="ssh -A -t $socrates -X ssh -A -t $soc_login -p 1943 -X"
 
 ev="yabanci@alist.crabdance.com"
-alias evssh="ssh -A -t $ev -X ssh -A -t memo@localhost -p 1947 -X"  # PORT!
+
+alias evssh="ssh -A -t $ev -X ssh -A -t $soc_login -p 1947 -X"  # PORT!
 
 
 function evscpTo () {
@@ -13,7 +15,7 @@ function evscpTo () {
 	files=$1
 	dest=$2
 
-	scp -P 1947 -o ProxyCommand="ssh $ev nc -w 1 127.0.0.1 1947" $files memo@localhost:$dest
+	scp -P 1947 -o ProxyCommand="ssh $ev nc -w 1 127.0.0.1 1947" $files $soc_login:$dest
 }
 
 
@@ -22,7 +24,7 @@ function evscpFrom(){
 	filereg=$1
 	destfold=$2
 
-	scp -o ProxyCommand="ssh $ev nc memo@localhost 1943" memo@localhost:$filereg $destfold
+	scp -o ProxyCommand="ssh $ev nc $soc_login 1943" $soc_login:$filereg $destfold
 }
 
 
@@ -33,14 +35,14 @@ function workscpTo(){
 #	bfile=$(basename $file)
 
 	scp $file $socrates:~/$destfold
-	ssh $socrates "scp  memo@localhost:$destfold/ -P 1943"
+	ssh $socrates "scp  $soc_login:$destfold/ -P 1943"
 }
 
 function workscpFrom(){
 	destfile=$1
 	homefile=$2
 
-	ssh $socrates "scp memo@localhost:$destfile -P 1943 ./tmp.file"
+	ssh $socrates "scp $soc_login:$destfile -P 1943 ./tmp.file"
 	scp $socrates:~/tmp.file $homefile
 }
 
@@ -59,7 +61,7 @@ frame=25
 if [ "$1" != "" ];then	qual=$1; fi
 if [ "$2" != "" ];then	frame=$2; fi
 
-#ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t memo@localhost -p 1943 "\
+#ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t $soc_login -p 1943 "\
 # gst-launch v4l2src device=/dev/video0 \
 #  ! video/x-raw-yuv,height=240,framerate=$frame/1\
 #  ! autovideoconvert\
