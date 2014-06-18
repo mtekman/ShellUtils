@@ -18,7 +18,7 @@ remotemessage() {
 socratInit() {
 	while :; do
 		echo "Connected @ `date`" >> /tmp/socrates.log
-		$git_loc/bash_global/login_socrates.expect
+		$git_loc/bash_global/login_socrates.expect $1
 		echo -en "\rReconnect?[y]"
 		read -n 1 -t 3 answer
 		[ "$answer" = "n" ] && break
