@@ -1,7 +1,7 @@
 #!/bin/bash
 
 socrates="zcapdd1@socrates.ucl.ac.uk"
-soc_login="rfh@localhost"
+soc_login="memo@localhost"
 
 alias workssh="ssh -A -t $socrates -X ssh -A -t $soc_login -p 1943 -X"
 

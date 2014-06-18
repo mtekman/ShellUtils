@@ -1,8 +1,28 @@
 #!/usr/bin/expect -f
 
-# Connect 20 minutes at a time
+# If first argument is "override" then password is a hash
+#set first_arg [lindex $argv 0]
+#if {$first_arg == "override"} { 
+	set password "K1tt0n's"
+#	set timearg 60
+#}
+
+#if {$password == "" }{
+#	# grab the password
+#	stty -echo
+#	send_user -- "Password: "
+#	expect_user -re "(.*)\n"
+#	send_user "\n"
+#	stty echo
+#	set password $expect_out(1,string)
+#}
+
+# Connect 20 minutes at a time, or at an argument var
 # Destination tends to close connection
-set timeout 1200
+set timearg [lindex $argv 0]
+if { $timearg == "" } { set timearg 20}
+set timeout [expr $timearg*60]
+set message "You are now logged in for $timearg mins"
 
 spawn ssh -R 1943:localhost:22 zcapdd1@socrates.ucl.ac.uk
 send_user "connecting...\n"
@@ -15,22 +35,22 @@ expect {
   "> " { }
   "$ " { }
   "assword: " { 
-        send "K1tt0n's\n" 
+        send "$password\n" 
         expect {
-          "% " { }
-          "$ " { }
+          "% " { send "$message"}
+          "$ " { send "$message"}
         }
   }
   "(yes/no)? " { 
         send "yes\n"
         expect {
-          "% " { }
-          "$ " { }
+          "% " { send "$message"}
+          "$ " { send "$message"}
           "assword: " { 
-             send "K1tt0n's\n" 
+             send "$password\n" 
              expect {
-               "% " { }
-               "$ " { }
+               "% " { send "$message"}
+               "$ " { send "$message"}
              }
           }
         }
@@ -47,10 +67,4 @@ expect {
 	eof { exit }
 }
 
-#send "echo hi\n"
-#expect "%" {}
-#send "sleep 2\n"
-#expect "%" {}
-#send "exit\n"
-#send_user "\nobs\n"
 exit
