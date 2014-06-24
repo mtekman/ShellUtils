@@ -1,0 +1,17 @@
+PROMPT_DIRTRIM=2
+
+PS1="\
+\[$debian_chroot\]\
+\[$bldred\]\
+\u\
+\[$txtylw\]@\
+\[$bldred\]\
+\h\
+\[$txtrst\]\
+:\
+\[$txtgrn\]\
+\w\
+\[$txtrst\]\
+\$ \
+\[$txtgrn\]"
+

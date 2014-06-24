@@ -20,3 +20,5 @@ for loc in ${!loc_array[*]}; do
 done
 
 alias cdpers="cd $git_loc"
+alias keto="cd $git_loc/exoz/ketologger"
+
