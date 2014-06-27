@@ -13,5 +13,5 @@ PS1="\
 \w\
 \[$txtrst\]\
 \$ \
-\[$txtgrn\]"
+\[$txtrst\]"
 
