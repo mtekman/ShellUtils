@@ -4,3 +4,5 @@
 
 alias gpu="git push -u"
 alias gpuom=gpu" origin master"
+alias gpull="git pull origin master"
+alias gcomm="git commit -a -m"
