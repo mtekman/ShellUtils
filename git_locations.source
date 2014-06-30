@@ -8,6 +8,7 @@ loc_array[yamato]=/nomansland/REPOS/personal/
 loc_array[tower]=/nomansland/REPOS/personal/
 loc_array[pythagoras]=/home/rfh/Documents/REPOS/personal_scripts/
 loc_array[memo-PowerEdge-R710]=/home/rfh/Documents/REPOS/personal_scripts/
+loc_array[Ev]=/home/tetris/Desktop/personal_scripts/
 
 host=$(hostname)
 
