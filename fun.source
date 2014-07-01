@@ -36,3 +36,13 @@ function I() {
      fi
   fi
 }
+
+function brightness() {
+	lvl=$1
+	[ "$lvl" = "" ] && lvl=2
+
+	files=$(ls /sys/class/backlight/*/brightness)
+	for f in $files; do
+		sudo sh -c "echo $lvl > $f"
+	done
+}
