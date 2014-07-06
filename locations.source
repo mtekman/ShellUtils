@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+# List of mounts across systems -- git_location:starting_dir
+declare -A loc_array
+
+echo $HOME
+
+# Trusted Machine list:
+#   shiroe/N900		 - Phone
+loc_array[shiroe]="( $HOME/MyDocs/personal_scripts/  $HOME/MyDocs/ )"
+loc_array[n900]=${loc_array[shiroe]}
+
+
+#   yamato/tower 	 - WorkDesk
+loc_array[yamato]="( /nomansland/REPOS/personal/  $HOME/Desktop/Linkage/ )"
+loc_array[tower]=${loc_array[yamato]}
+
+
+#   pythag/memo-powerdge - Workhorse1
+#   leiniz 		 - Workhorse2
+loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ $HOME/Desktop/Linkage/ )"
+loc_array[memo-PowerEdge-R710]=${loc_array[Leibniz]}
+loc_array[Leibniz]=${loc_array[Leibniz]}
+
+
+#   Ev/jaeger 		 - Bedroom
+loc_array[Ev]="( $HOME/Desktop/personal_scripts/ $HOME/Documents/ )"
+loc_array[jaeger]=${loc-array[Ev]}
+
+
+host=$(hostname)
+valid_machine=(${loc_array[$host]})
+
+if [ "$valid_machine" != "" ]; then
+#	echo "$host = ${valid_machine[1]}, ${valid_machine[2]}"
+	export git_loc="${valid_machine[1]}"
+	export start_dir="${valid_machine[2]}"
+else
+	echo "Could not find mount points for hostname:\"$host\""
+fi
+
+alias personal="cd $git_loc"
+alias keto="cd $git_loc/exoz/ketologger;"
+
+cd $start_dir
