@@ -4,8 +4,6 @@
 # List of mounts across systems -- git_location:starting_dir
 declare -A loc_array
 
-echo $HOME
-
 # Trusted Machine list:
 #   shiroe/N900		 - Phone
 loc_array[shiroe]="( $HOME/MyDocs/personal_scripts/  $HOME/MyDocs/ )"
