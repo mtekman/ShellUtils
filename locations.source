@@ -9,6 +9,9 @@ declare -A loc_array
 loc_array[shiroe]="( $HOME/MyDocs/personal_scripts/  $HOME/MyDocs/ )"
 loc_array[n900]=${loc_array[shiroe]}
 
+#   shinpachi		 - Lappy
+loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents/ )"
+
 
 #   yamato/tower 	 - WorkDesk
 loc_array[yamato]="( /nomansland/REPOS/personal/  $HOME/Desktop/Linkage/ )"
