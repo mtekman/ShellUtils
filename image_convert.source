@@ -47,3 +47,11 @@ function converter(){
 	convert -coalesce -layers OptimizeTransparency $delay $inp_prefix"*.png" 
 
 }
+
+# Makes a syslinux compatible boot splash image
+function makeSplash(){
+	[ $# != 1 ] && echo "makeSplash <input>" && return
+	out=splash.jpg
+	`convert -depth 16 -colors 65536 -resize "640x480^" -gravity center -crop 640x480+0+0 $1 $out`
+	echo "==> $out"	
+}
