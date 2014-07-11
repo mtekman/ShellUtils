@@ -88,8 +88,8 @@ if [ "$2" != "" ];then	frame=$2; fi
 
 ssh yabanci@alist.crabdance.com "\
  gst-launch v4l2src device=/dev/video0 \
-  ! video/x-raw-yuv,height=240,framerate=$frame/1\
-  ! autovideoconvert\
+  ! video/x-raw,height=240,framerate=$frame/1\
+  ! videoconvert\
   ! jpegenc quality=$qual\
   ! filesink location=/dev/stdout"\
  | gst-launch filesrc location=/dev/stdin\
