@@ -1,6 +1,6 @@
 ##Rsync default alias
 # archive, verbose, compress, partial/continue
-alias rsync="rsync -avzP"
+alias rsync2="rsync -avzP"
 
 
 #### ssh display commands

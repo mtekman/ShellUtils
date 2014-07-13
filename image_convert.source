@@ -1,3 +1,4 @@
+#!/bin/bash
 
 function gifRegions(){
 	movie_file=$1
@@ -50,8 +51,20 @@ function converter(){
 
 # Makes a syslinux compatible boot splash image
 function makeSplash(){
-	[ $# != 1 ] && echo "makeSplash <input>" && return
+	[ $# -lt 1 ] && echo "makeSplash <input>" && return
+	inp=$1
+	rez=$2
 	out=splash.jpg
-	`convert -depth 16 -colors 65536 -resize "640x480^" -gravity center -crop 640x480+0+0 $1 $out`
-	echo "==> $out"	
+	
+#	rez=$(xrandr --current | egrep -o "current [0-9]+ x [0-9]+" | awk -F "current " '{print $2}' | sed 's/ //g')
+#	[ "$rez" = "" ] && echo "Could not determine resolution, is xrandr installed?" && return
+
+	# Max allowed resolution is determined purely by the framebuffer
+	if [ "$rez" = "" ]; then
+		[ "$(which hwinfo; echo $?)" = "1" ] && echo "hwinfo not installed, please set widthxheight in 2nd argument" && return
+		rez=$(sudo hwinfo --framebuffer | tail -2 | head -1 | egrep -o "[0-9][0-9]+x[0-9][0-9]+")
+	fi
+
+	convert -depth 16 -colors 65536 -resize "$rez^" -gravity center -crop $rez+0+0 $inp $out
+	echo "==> $out @ $rez"	
 }
