@@ -6,5 +6,5 @@
 
 alias gpu="git push -u"
 alias gpull="git pull origin master && fpull=\"Y\""
-function gcomm() { [ -n $fpull ] && git commit -a -m $* && fcomm="Y" || echo "Have you pulled first?"; }
-function gpuom() { [ -n $fcomm ] && gpu origin master || echo "Have you committed first?"; }
+function gcomm() { [ "$fpull" = "Y" ] && git commit -a -m $* && fcomm="Y" || echo "Have you pulled first?"; }
+function gpuom() { [ "$fcomm" = "Y" ] && gpu origin master || echo "Have you committed first?"; }
