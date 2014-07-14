@@ -2,7 +2,10 @@
 #  Git update scripts
 #
 
+fpull="/home/user/.gpull"
+fcomm="/home/user/.gcommed"
+
 alias gpu="git push -u"
-alias gpuom=gpu" origin master"
-alias gpull="git pull origin master"
-alias gcomm="git commit -a -m"
+alias gpull="git pull origin master && touch $fpull"
+function gcomm() { [ -f $fpull ] && git commit -a -m $* && touch $fcomm || echo "Have you pulled first?"; }
+function gpuom() { [ -f $fcomm ] && gpu origin master* && rm $fcomm $fpull || echo "Have you committed first?"; }
