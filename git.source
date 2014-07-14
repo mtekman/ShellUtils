@@ -2,10 +2,9 @@
 #  Git update scripts
 #
 
-fpull="/home/user/.gpull"
-fcomm="/home/user/.gcommed"
+# Sets temp varaiables that only exist for the same bash session
 
 alias gpu="git push -u"
-alias gpull="git pull origin master && touch $fpull"
-function gcomm() { [ -f $fpull ] && git commit -a -m $* && touch $fcomm || echo "Have you pulled first?"; }
-function gpuom() { [ -f $fcomm ] && gpu origin master* && rm $fcomm $fpull || echo "Have you committed first?"; }
+alias gpull="git pull origin master && fpull=\"Y\""
+function gcomm() { [ -n $fpull ] && git commit -a -m $* && fcomm="Y" || echo "Have you pulled first?"; }
+function gpuom() { [ -n $fcomm ] && gpu origin master || echo "Have you committed first?"; }
