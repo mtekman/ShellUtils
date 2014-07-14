@@ -51,9 +51,13 @@ function converter(){
 
 # Makes a syslinux compatible boot splash image
 function makeSplash(){
-	[ $# -lt 1 ] && echo "makeSplash <input>" && return
+	[ $# -lt 1 ] && echo "makeSplash <input> [ widthxheight ] [--squish]" && return
 	inp=$1
 	rez=$2
+	squish=$3
+	# Check second argument just in case no rez is given
+	[ "$rez" == "--squish" ] && squish="--squish" && rez=""
+
 	out=splash.jpg
 	
 #	rez=$(xrandr --current | egrep -o "current [0-9]+ x [0-9]+" | awk -F "current " '{print $2}' | sed 's/ //g')
@@ -62,9 +66,16 @@ function makeSplash(){
 	# Max allowed resolution is determined purely by the framebuffer
 	if [ "$rez" = "" ]; then
 		[ "$(which hwinfo; echo $?)" = "1" ] && echo "hwinfo not installed, please set widthxheight in 2nd argument" && return
+		echo -n "Determining max framebuffer rez..."
 		rez=$(sudo hwinfo --framebuffer | tail -2 | head -1 | egrep -o "[0-9][0-9]+x[0-9][0-9]+")
 	fi
 
-	convert -depth 16 -colors 65536 -resize "$rez^" -gravity center -crop $rez+0+0 $inp $out
-	echo "==> $out @ $rez"	
+	extra_chars="!"															# Force scale
+	[ "$squish" = "" ] && extra_chars="^ -gravity center -crop $rez+0+0 "		# Keep aspect + crop
+
+	command="convert -depth 16 -colors 65536 -resize $rez$extra_chars $inp $out"
+#	echo $command
+	$command
+
+	echo "--> $out @ $rez"	
 }
