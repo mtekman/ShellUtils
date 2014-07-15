@@ -14,7 +14,7 @@ loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents
 
 
 #   yamato/tower 	 - WorkDesk
-loc_array[yamato]="( /nomansland/REPOS/personal/  $HOME/Desktop/Linkage/ )"
+loc_array[yamato]="( /nomansland/REPOS/personal/  $HOME/Desktop/Active_Work/ )"
 loc_array[tower]=${loc_array[yamato]}
 
 
