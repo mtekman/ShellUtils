@@ -1,15 +1,37 @@
 
-if [ "$hostname" = "shiroe" ]; then
+if [ "$(hostname)" = "shiroe" ]; then
 
-archmount() {
+function archmount() {
 
-mount /dev/mmcblk1p2 /archroot
-mount --bind /dev /archroot/dev
-mount --bind /sys /archroot/sys
-mount --bind /proc /archroot/proc
-cp /etc/resolv.conf /archroot/etc/resolv.conf
-chroot /archroot "/usr/bin/bash"
+nam=archmount
+
+[ $# = 0 ] && echo "$nam <[OPTIONS]>
+
+OPTIONS:
+Either:	$nam /dev/partition /path/to/mount_point
+Or:	$nam --defaults
+
+where defaults are /dev/mmcblk1p2 and /archroot
+ " && return
+
+
+#[ "$USER" != "root" ] && echo "Need to be root!" && return
+
+sud="sudo"
+
+device=$1
+[ "$device" = "--defaults" ] && device=/dev/mmcblk1p2
+archroot=$2
+[ "$archroot" = "" ] && archroot=/archroot
+
+$sud mount $device $archroot
+$sud mount --bind /dev $archroot/dev
+$sud mount --bind /sys $archroot/sys
+$sud mount --bind /proc $archroot/proc
+$sud cp /etc/resolv.conf $archroot/etc/resolv.conf
+$sud chroot $archroot "/usr/bin/bash"
 
 }
+export -f archmount 
 
 fi
