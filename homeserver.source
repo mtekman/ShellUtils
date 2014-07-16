@@ -3,9 +3,9 @@
 socrates="zcapdd1@socrates.ucl.ac.uk"
 ev="yabanci@alist.crabdance.com"
 
-soc_login () { read -p "username: " userand; echo "$userand@localhost"; }
-workssh (){ ssh -A -t $socrates -X ssh -A -t "`soc_login`" -p 1943 -X; }
-evssh (){ ssh -A -t $ev -X ssh -A -t "`soc_login`" -p 1947 -X; }
+soc_login () { [ "$1" = "" ] && read -p "username: " userand || userand=$1; echo "$userand@localhost"; }
+workssh (){ ssh -A -t $socrates -X ssh -A -t "`soc_login $1`" -p 1943 -X; }
+evssh (){ ssh -A -t $ev -X ssh -A -t "`soc_login $1`" -p 1947 -X; }
 
 
 function evscpTo () {
