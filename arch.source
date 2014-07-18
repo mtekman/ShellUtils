@@ -10,19 +10,25 @@ nam=archmount
 OPTIONS:
 Either:	$nam /dev/partition /path/to/mount_point
 Or:	$nam --defaults
+	$nam --unmount
 
 where defaults are /dev/mmcblk1p2 and /archroot
  " && return
 
-
-#[ "$USER" != "root" ] && echo "Need to be root!" && return
-
-sud="sudo"
+[ "$USER" != "root" ] && sud="sudo"
 
 device=$1
-[ "$device" = "--defaults" ] && device=/dev/mmcblk1p2
 archroot=$2
+
 [ "$archroot" = "" ] && archroot=/archroot
+
+
+# If unmount
+[ "$device" = "--unmount" ] && $sud umount $archroot/dev $archroot/sys $archroot/proc $archroot && return
+
+# If mount
+[ "$device" = "--defaults" ] && device=/dev/mmcblk1p2
+
 
 $sud mount $device $archroot
 $sud mount --bind /dev $archroot/dev
@@ -31,6 +37,7 @@ $sud mount --bind /proc $archroot/proc
 $sud cp /etc/resolv.conf $archroot/etc/resolv.conf
 $sud chroot $archroot "/usr/bin/bash"
 
+$sud umount $archroot/dev $archroot/sys $archroot/proc $archroot
 }
 export -f archmount 
 
