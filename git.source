@@ -11,6 +11,6 @@ alias gpull="git pull origin master && fpull=\"Y\""
 #function gpuom() { [ "$fcomm" = "Y" ] && gpu origin master || echo "Have you committed first? (gcomm)"; }
 
 alias gcomm="[ \"$fpull\" = \"\" ] && echo 'Have you pulled first? (gpuom)'\
- || fcomm=Y & git commit -a -m"
+ || fcomm=Y && git commit -a -m"
 alias gpuom="[ \"$fcomm\" = \"\" ] && echo 'Have you committed first? (gcomm)'\
  || gpu origin master"
