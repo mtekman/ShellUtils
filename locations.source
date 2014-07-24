@@ -26,8 +26,8 @@ loc_array[Leibniz]=${loc_array[Leibniz]}
 
 
 #   Ev/jaeger 		 - Bedroom
-loc_array[Ev]="( $HOME/Desktop/personal_scripts/ $HOME/Documents/ )"
-loc_array[jaeger]=${loc-array[Ev]}
+loc_array[Ev]="( $HOME/REPOS/personal_scripts/ $HOME/ )"
+loc_array[jaeger]=${loc_array[Ev]}
 
 
 host=$(hostname)
