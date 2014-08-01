@@ -5,7 +5,7 @@ PS1="\
 \[$bldred\]\
 \u\
 \[$txtylw\]@\
-\[$bldred\]\
+\[$hostcolor\]\
 \h\
 \[$txtrst\]\
 :\
