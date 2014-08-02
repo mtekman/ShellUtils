@@ -1,30 +1,20 @@
 #!/usr/bin/expect -f
 
-# If first argument is "override" then password is a hash
-#set first_arg [lindex $argv 0]
-#if {$first_arg == "override"} { 
-	set password "K1tt0n's"
-#	set timearg 60
-#}
+set password "K1tt0n's"
 
-#if {$password == "" }{
-#	# grab the password
-#	stty -echo
-#	send_user -- "Password: "
-#	expect_user -re "(.*)\n"
-#	send_user "\n"
-#	stty echo
-#	set password $expect_out(1,string)
-#}
-
-# Connect 20 minutes at a time, or at an argument var
-# Destination tends to close connection
+# Connect 30 minutes at a time
 set timearg [lindex $argv 0]
-if { $timearg == "" } { set timearg 20}
+if { $timearg == "" } { set timearg 30}
 set timeout [expr $timearg*60]
-set message "You are now logged in for $timearg mins"
 
-spawn ssh -R 1943:localhost:22 zcapdd1@socrates.ucl.ac.uk
+# On a given port
+set portarg [lindex $argv 1]
+if { $portarg == "" } { set portarg 1943}
+
+set message "You are now logged in for $timearg mins on port $portarg"
+
+
+spawn ssh -R $portarg:localhost:22 zcapdd1@socrates.ucl.ac.uk
 send_user "connecting...\n"
 
 #login handles cases:
