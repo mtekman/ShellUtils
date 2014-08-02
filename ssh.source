@@ -21,9 +21,18 @@ remotemessage() {
 
 
 socratInit() {
+        [ $# != 1 ] && echo "Initiates a reverse SSH session using socrates.ucl.ac.uk as proxy for the current user and a given port
+
+	usage: socratInit <PORT>
+	" && return
+
+	port=$1
 	while :; do
 		echo "Connected @ `date`" >> /tmp/socrates.log
-		$git_loc/bash_global/login_socrates.expect $1
+
+		# By default the login is set 30 mins
+		$git_loc/bash_global/login_socrates.expect 30 $port
+
 		echo -en "\rReconnect?[y]"
 		read -n 1 -t 3 answer
 		[ "$answer" = "n" ] && break
