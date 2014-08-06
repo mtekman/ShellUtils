@@ -94,9 +94,9 @@ export -f workcam
 
 function backyardcam(){
 
-a_qual="-q"; qual=75
+a_qual="-q"; qual=60
 a_fram="-r"; frame=25
-a_height="-h"; height=240
+a_height="-h"; height=480
 
 arglist=( "$@" )
 
