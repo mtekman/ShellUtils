@@ -50,3 +50,11 @@ evInit() {
 	done
 	echo -en "\rTERMINATED     \n"
 }
+
+
+secure_chromium() {
+    port=$1
+    chromium --proxy-server="socks://localhost:$port" #&
+#    exit
+}
+
