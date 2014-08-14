@@ -1,3 +1,16 @@
+
+# Are we chrooted?
+ending="\$"
+texter=$txtgrn
+
+if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
+	ending="\>>"
+	texter=$txtylw
+fi
+
+
+
+
 PROMPT_DIRTRIM=2
 
 PS1="\
@@ -9,9 +22,9 @@ PS1="\
 \h\
 \[$txtrst\]\
 :\
-\[$txtgrn\]\
+\[$texter\]\
 \w\
 \[$txtrst\]\
-\$ \
+$ending \
 \[$txtrst\]"
 

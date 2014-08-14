@@ -1,5 +1,4 @@
-
-if [ "$(hostname)" = "shiroe" ]; then
+#!/bin/bash
 
 function archmount() {
 
@@ -39,6 +38,4 @@ $sud chroot $archroot "/usr/bin/bash"
 
 $sud umount $archroot/dev $archroot/sys $archroot/proc $archroot
 }
-export -f archmount 
-
-fi
+#export -f archmount 
