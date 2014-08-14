@@ -4,7 +4,7 @@ ending="\$"
 texter=$txtgrn
 
 if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
-	ending="\>>"
+	ending=">>"
 	texter=$txtylw
 fi
 
