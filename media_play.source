@@ -1,5 +1,5 @@
 #!/bin/bash
-ignoredir=/home/user/MyDocs/.ignore/
+ignoredir=/media/mmc1/.ignore/
 
 playRate(){
   if [ $# != 1 ];then
@@ -74,12 +74,12 @@ playRate(){
 
 
 lastTouched() {
-  if [ $# != 2 ];then
-    echo -e "lastTouched <program> <directory>\n" >&2
+  if [ $# -lt 2 ];then
+    echo -e "lastTouched <program> <directory> [-r]\n" >&2
   else
      prog=$1
 
-     files=$(ls $2/* -lt -c | awk '{print $NF}')
+     files=$(ls $2/* -lt $3 -c | awk '{print $NF}')
      for file in $files; do
         $prog $file
 	echo "$(basename $file)" >&2
@@ -89,4 +89,12 @@ lastTouched() {
 
 lastComics() {
   lastTouched cbrpager $ignoredir/zips
+}
+
+firstTouched() {
+    lastTouched $1 $2 "-r"
+}
+
+firstComics() {
+   firstTouched cbrpager $ignoredir/zips
 }
