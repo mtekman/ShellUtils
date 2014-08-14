@@ -54,7 +54,9 @@ evInit() {
 
 secure_chromium() {
     port=$1
-    chromium --proxy-server="socks://localhost:$port" #&
-#    exit
+    bin=chromium
+    $bin -h >/dev/null 2>&1
+    [ $? = 127 ] && bin=chromium-browser
+    $bin --proxy-server="socks://localhost:$port"
 }
 
