@@ -1,0 +1,13 @@
+#!/bin/bash
+
+wakeUpGintama() {
+
+comm=wol
+$comm -h >/dev/null 2>&1
+[ "$?" = "127" ] && comm=wakeonlan
+
+$comm -i alist.crabdance.com -p 7 00:ff:ff:ff:ff:ff
+$comm -i alist.crabdance.com -p 9 00:ff:ff:ff:ff:ff
+$comm -i alist.crabdance.com -p 40000 00:ff:ff:ff:ff:ff
+
+}
