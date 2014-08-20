@@ -23,7 +23,10 @@ archroot=$2
 
 
 # If unmount
-[ "$device" = "--unmount" ] && $sud umount $archroot/dev $archroot/sys $archroot/proc $archroot && return
+if [ "$device" = "--unmount" ];then
+	$sud umount $archroot/dev $archroot/sys $archroot/proc $archroot
+	return
+fi
 
 # If mount
 [ "$device" = "--defaults" ] && device=/dev/mmcblk1p2
@@ -33,6 +36,7 @@ $sud mount $device $archroot
 $sud mount --bind /dev $archroot/dev
 $sud mount --bind /sys $archroot/sys
 $sud mount --bind /proc $archroot/proc
+$sud mount --bind /dev/pts $archroot/dev/pts
 $sud cp /etc/resolv.conf $archroot/etc/resolv.conf
 $sud chroot $archroot "/usr/bin/bash"
 
