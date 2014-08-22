@@ -8,13 +8,15 @@ if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print 
 	texter=$txtylw
 fi
 
+# Are we screened?
+[ "$STY" != "" ]  && screener="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]"
 
 
 
 PROMPT_DIRTRIM=2
 
 PS1="\
-\[$debian_chroot\]\
+\[$screener\]\
 \[$bldred\]\
 \u\
 \[$txtylw\]@\
