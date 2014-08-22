@@ -10,7 +10,7 @@ loc_array[shiroe]="( $HOME/MyDocs/personal_scripts/  $HOME/MyDocs/ $txtcyn )"
 loc_array[n900]=${loc_array[shiroe]}
 
 #   shinpachi		 - Lappy
-loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents/ $txtblu )"
+loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents/ $bldpur )"
 
 #   gintoki		 - NAS
 loc_array[gintoki]="( $HOME/REPOS/personal_scripts/  $HOME/ $txtwht )"
