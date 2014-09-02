@@ -72,17 +72,6 @@ frame=25
 if [ "$1" != "" ];then	qual=$1; fi
 if [ "$2" != "" ];then	frame=$2; fi
 
-#ssh -A -t zcapdd1@socrates.ucl.ac.uk ssh -A -t $user_local -p 1943 "\
-# gst-launch v4l2src device=/dev/video0 \
-#  ! video/x-raw-yuv,height=240,framerate=$frame/1\
-#  ! autovideoconvert\
-#  ! jpegenc quality=$qual\
-#  ! filesink location=/dev/stdout"\
-# | gst-launch filesrc location=/dev/stdin\
-#  ! jpegdec\
-#  ! xvimagesink
-#}
-
 workssh "\
   gst-launch v4l2src device=/dev/video0 \
   ! video/x-raw-yuv,height=240,framerate=$frame/1\
@@ -92,7 +81,10 @@ workssh "\
 export -f workcam
 
 
-function backyardcam(){
+
+function remoteCam(){
+
+[ $# -lt 1 ] && echo "remoteCam <host> [-q -r -h]" && return
 
 a_qual="-q"; qual=60
 a_fram="-r"; frame=25
@@ -100,7 +92,9 @@ a_height="-h"; height=480
 
 arglist=( "$@" )
 
-for index in $(seq 0 $#); do
+remotehost=$1
+
+for index in $(seq 1 $#); do
 
     arg=${arglist[$index]}
     next=${arglist[$(( $index + 1 ))]}
@@ -111,12 +105,12 @@ for index in $(seq 0 $#); do
 done
 
 echo "
-using:\"backyardcam "$a_qual" $qual "$a_fram" $frame "$a_height" $height\"
+using:\"remoteCam $remotehost "$a_qual" $qual "$a_fram" $frame "$a_height" $height\"
 For quality, framerate, and height
 "
 
 
-ssh yabanci@alist.crabdance.com "\
+ssh $remotehost "\
  gst-launch v4l2src device=/dev/video0 \
   ! video/x-raw,height=$height,framerate=$frame/1\
   ! videoconvert\
@@ -125,7 +119,13 @@ ssh yabanci@alist.crabdance.com "\
  | gst-launch filesrc location=/dev/stdin\
   ! jpegdec\
   ! xvimagesink
-#  ! videoflip method='rotate-180'\
+}
+
+export -f remoteCam
+
+
+function backyardcam(){
+	remoteCam yabanci@alist.crabdance.com $*
 }
 
 export -f backyardcam
