@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-set password "K1tt0n's"
+set password "S4l1nc4k"
 
 # Connect 30 minutes at a time
 set timearg [lindex $argv 0]
