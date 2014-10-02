@@ -16,17 +16,17 @@ if [ "`hostname`" = "shinpachi" ]; then
 		esac
 	}
 
-	function xstart(){
-		fancy_arg="fancy"
-		minimal_arg="minimal"
-		vga_arg="vga"
-		ext_arg="extend"
-
-		[ $# -lt 1 ] && echo -e "Goddammit we've been through this, give a config too:\n\tusage: xstart ($fancy_arg|$minimal_arg) [($vga_arg|$ext_arg)]" && return
-
-		xinit $git_loc/os_specific/arch/xinitrc_dot
-
-	}
+#	function xstart(){
+#		fancy_arg="fancy"
+#		minimal_arg="minimal"
+#		vga_arg="vga"
+#		ext_arg="extend"
+#
+#		[ $# -lt 1 ] && echo -e "Goddammit we've been through this, give a config too:\n\tusage: xstart ($fancy_arg|$minimal_arg) [($vga_arg|$ext_arg)]" && return
+#
+#		xinit $git_loc/os_specific/arch/xinitrc_dot
+#
+#	}
 
 	
 
