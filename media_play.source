@@ -1,6 +1,14 @@
 #!/bin/bash
 ignoredir=/media/mmc1/.ignore/
 
+
+youstream(){
+    [ $# != 1 ] && echo "youstream <youtube-url>" && return
+	mplayer -cache 2048 "`youtube-dl -f 18 -g $1`"
+}
+
+
+
 playRate(){
   if [ $# != 1 ];then
     echo -e "playRate <dir>\n"
