@@ -21,22 +21,20 @@
 
 backup(){
 	[ $# != 1 ] && echo "backup <file>, makes file.backupN" && return
-	f=$1
-	ext=$(echo $f | awk -F"." '{print $NF}')
+	ext=$(echo $1 | awk -F"." '{print $NF}')
 
-	num=1
-	newext="backup_"$num
-	base=$(echo $f | awk -F"$ext" '{print $1}')
-	newbase=$base$newext
-
-	[ -e $newbase ] 
-
-
-#	[[ "$ext" =~ "backup" ]] && num=$(echo $ext | awk -F"_" '{print $NF}')
-	num=$(echo $ext | awk -F"backup_" '{print $NF}')
-	num=$(( num + 1 ))
-
+	base=$(echo $1 | awk -F"$ext" '{print $1}')
+	[ "$base" = "" ] && base=$1"."
 	
-	cp $f $newbase
+	num=1
+
+	while :; do
+		newext="backup_"$num
+		newbase=$base$newext
+		! [ -e $newbase ] && break
+		num=$(( num + 1 ))
+	done
+
+	cp $1 $newbase
 	echo "Made: $newbase"
 }
