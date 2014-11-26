@@ -17,7 +17,7 @@ loc_array[gintoki]="( $HOME/REPOS/personal_scripts/  $HOME/ $txtwht )"
 
 
 #   coppertop/tower - WorkDesk
-loc_array[coppertop]="( /nomansland/REPOS/personal/  $HOME/ $txtylw )"
+loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/ $txtylw )"
 
 
 #   pythag/memo-powerdge - Workhorse1
