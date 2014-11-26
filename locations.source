@@ -16,10 +16,8 @@ loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents
 loc_array[gintoki]="( $HOME/REPOS/personal_scripts/  $HOME/ $txtwht )"
 
 
-#   yamato/tower 	 - WorkDesk
-loc_array[yamato]="( /nomansland/REPOS/personal/  $HOME/Desktop/Active_Work/ $txtpur )"
-loc_array[tower]=${loc_array[yamato]}
-loc_array[towerarch]=${loc_array[yamato]}
+#   coppertop/tower - WorkDesk
+loc_array[coppertop]="( /nomansland/REPOS/personal/  $HOME/ $txtylw )"
 
 
 #   pythag/memo-powerdge - Workhorse1
