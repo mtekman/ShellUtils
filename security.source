@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function shell_pass() {
+
+	# password
+	hash=68811987a9c2c687836cbd0c9f0440d0fd65944b
+	prompt_pass="Password: "
+	prompt_error="Nope.                Nice try though"
+
+	# See if zenity is available
+	junk=$(which zenity1 2>&1 >/dev/null)
+	zen=$?
+
+	if [ $zen = 0 ]; then
+		entry=$(zenity --entry --text="$prompt_pass" --hide-text)
+	else
+		read -p "$prompt_pass" -s entry
+	fi
+
+	# Hash it up
+	entry=$(echo -n $entry | sha1sum | awk '{print $1}')
+
+	if [ "$entry" = "$hash" ]; then
+		echo ""
+		$*
+	else
+		[ $zen = 0 ] && zenity --error --text="$prompt_error" || echo -e "\n$prompt_error"
+	fi
+}
