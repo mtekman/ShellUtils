@@ -17,7 +17,7 @@ loc_array[gintoki]="( $HOME/REPOS/personal_scripts/  $HOME/ $txtwht )"
 
 
 #   coppertop/tower - WorkDesk
-loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/ $txtylw )"
+loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Documents $txtylw )"
 
 
 #   pythag/memo-powerdge - Workhorse1
@@ -48,4 +48,6 @@ fi
 alias personal="cd $git_loc"
 alias keto="cd $git_loc/exoz/ketologger;"
 
-cd $start_dir
+if [ "`pwd`" = "$HOME" ]; then
+	cd $start_dir
+fi
