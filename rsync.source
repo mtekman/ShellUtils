@@ -1,0 +1,8 @@
+
+
+function rsend_gintoki_tetris() {
+	files=$*;
+	[ $# -lt 1 ] && echo "rsend_gintoki_tetris <FILES>, sends to tetris@gintoki::send_to_tetris/" && return
+
+	rsync -avP $files tetris@gintoki::send_to_tetris/
+}
