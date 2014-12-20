@@ -5,17 +5,19 @@ ev="yabanci@alist.crabdance.com"
 
 user_local () { [ "$1" = "" ] && read -p "username: " userand || userand=$1; echo "$userand@localhost"; }
 socratssh (){
-	[ $# -lt 1 ] && echo "Connects to a reverse ssh session previosly initiated by a remote user for a given port.
+	[ $# -lt 2 ] && echo "Connects to a reverse ssh session previosly initiated by a remote user for a given port.
 
-	usage: socratssh <remote-user> [port]
+	usage: socratssh <remote-user> <port> [ssh_args]
 " && return
 	
 	user=$1
 	port=$2
-	[ "$port" = "" ] && port=1943
+	args="${@:3}"
+#	echo $args >&2
 
-	ssh -A -t $socrates -X\
-	ssh -A -t "`user_local $user`" -p $port -X;
+
+	ssh -A -t $socrates $args\
+	ssh -A -t "`user_local $user`" -p $port $args;
 }
 
 evssh (){ ssh -A -t $ev -X ssh -A -t "`user_local $1`" -p 1947 -X; }

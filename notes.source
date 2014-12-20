@@ -1,0 +1,77 @@
+# init notes
+notes_dir=$git_loc/notes/quick/
+last_file_stor=$notes_dir/.last
+
+EDITOR=nano
+
+! [ -e $last_file_stor ]\
+ && mkdir -p $notes_dir\
+ && touch $last_file_stor
+
+
+function notes_usage(){
+	echo "	notes < id | OPTIONS>
+
+id(s)="$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" NEW
+
+OPTIONS:
+--last			open last notes file
+--delete file
+--rename file
+
+"
+}
+
+function notes() {
+
+
+	[ $# -lt 1 ] && notes_usage && return
+
+	opt=$1
+	id=$1
+
+	case "$opt" in
+		"--last")lst="Y";;
+		"--delete")id=$2;rem="Y";;
+		"--rename")id=$2;rnm_arg=$3;rnm="Y";;
+	esac
+
+	[ "$id" = "" ] && notes_usage && return
+	file_id=$notes_dir/$id.txt
+
+	# Last
+	if [ -n "$lst" ]; then
+		! [ -e $last_file_stor ]\
+		 && echo "No last notes file found, please choose from:
+$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
+		 && unset rem rnm lst opt id && return
+
+		id=$(cat $last_file_stor)
+		file_id=$notes_dir/$id.txt
+	fi
+
+	# Remove
+	if [ -n "$rem" ]; then
+		read -p "Remove $id?[y/n] " ans
+		[ "$ans" = "y" ] && rm $file_id && rm $last_file_stor && echo "DONE"
+		unset rem rnm lst opt id
+		return
+	fi
+
+	# Rename
+	if [ -n "$rnm" ]; then
+		read -p "Rename $id to $rnm_arg?[y/n] " ans
+		[ "$ans" = "y" ] && mv $file_id "$(dirname $file_id)/$rnm_arg.txt"\
+			&& rm $last_file_stor && echo "DONE"
+		unset rem rnm lst opt id
+		return
+	fi
+
+
+	! [ -e $file_id ] && echo -e "$id\n==============\n" > $file_id
+
+	$EDITOR $file_id
+	echo $id > $last_file_stor
+	unset rem rnm lst opt id
+}
+export -f notes
