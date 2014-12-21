@@ -2,7 +2,7 @@
 notes_dir=$git_loc/notes/quick/
 last_file_stor=$notes_dir/.last
 
-EDITOR=nano
+#EDITOR=nano
 
 ! [ -e $last_file_stor ]\
  && mkdir -p $notes_dir\
@@ -67,7 +67,6 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 		return
 	fi
 
-
 	! [ -e $file_id ] && echo -e "$id\n==============\n" > $file_id
 
 	$EDITOR $file_id
@@ -75,3 +74,16 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 	unset rem rnm lst opt id
 }
 export -f notes
+
+
+function notes_completion(){
+	local cur
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+	COMPREPLY=( $(compgen -W "$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" -- $cur ) )
+
+	return 0
+}
+
+complete -F notes_completion notes
