@@ -5,6 +5,35 @@ hs_watch=/common_space/download_area/daemons/torrent_watch
 scp="scp -P $hs_port"
 ssh="ssh -p $hs_port"
 
+function torrentStat() {
+	eval $ssh $hs_addr "\"\
+cd /common_space/download_area/daemons/torrent_watch;
+screen -r rtorr -X hardcopy;
+cat hardcopy.0\
+ | egrep -B 1 '(done)|([0-9]+\s/\s[0-9]+)';
+
+
+#while read line; do
+# head -$(( $line - 1 )) hardcopy.0 | tail -1;
+# head -$line hardcopy.0 | tail -1;
+#done</var/tmp/rtorr_lines
+\""
+
+
+
+#cut -f 1 /var/tmp/rdump
+#lines=$(egrep -n "(done)|([0-9]+\s/\s[0-9]+)" hardcopy.0 | awk -F":" 
+#'{print $1}' ); echo $lines"
+#
+#for ln in $lines; do\
+#   data=$(head -$ln hardcopy.0 | tail -1);\
+#   title=$(head -$(( $ln - 1 )) hardcopy.0 | tail -1);\
+#   echo -e "$title\n$data";\
+#done'
+
+}
+
+
 
 function torrentAdd(){
 	[ $# -lt 1 ] && echo "torrentAdd <torrent list>
@@ -12,7 +41,7 @@ function torrentAdd(){
 Sends a list of .torrent files to the homeserver watch directory to 
 begin downloading " && return
 
-	$scp $* $hs_addr:$hs_watch/
+	eval $scp "$1" $hs_addr:$hs_watch/
 }
 
 
@@ -23,24 +52,4 @@ Prompts .torrent files for deletion on homeserver for all torrents
 matching any of the names in the name list" && return
 
 	$ssh $hs_addr "cd $hs_watch; for nam in $*; do rm -i \".*$nam.*\"; done"
-}
-
-function torrentStat() {
-	[ $# -lt 1 ] && echo "torrentStat <name list>
-
-Checks on status of downloads matching those given in the name list
-" && return
-
-#	$ssh $hs_addr "for id in $*; do\
-# cd ;\
-# screen -r rtorr -X hardcopy;\
-# line=$(grep \"$id\" hardcopy.0);\
-# status=$(echo \"$line\" | egrep -o \"[0-9]+\s/[0-9]+\");\
-# perc=$(echo \"$status\" | bc);\
-# echo \"$id :  $perc %\";\
-#done;"
-
-	$ssh $hs_addr "cd;screen -r rtorr -X hardcopy;status=$(egrep -o \"[0-9]+\s/[0-9]+\" | head -1);perc=$(echo \"$status\" | bc);echo \"$id :  $perc %\""
-
-
 }
