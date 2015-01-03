@@ -1,5 +1,5 @@
 #!/bin/bash
-ignoredir=/media/mmc1/.ignore/
+ignoredir=~/Documents/REPOS/.ignore/
 
 
 youstream(){
@@ -96,7 +96,7 @@ lastTouched() {
 }
 
 lastComics() {
-  lastTouched cbrpager $ignoredir/zips
+  lastTouched comix $ignoredir/zips
 }
 
 firstTouched() {

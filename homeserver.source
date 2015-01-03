@@ -68,8 +68,7 @@ function backyard(){
 
 
 function workcam(){
-qual=75
-frame=25
+#	remoteCam "$socrates \"ssh   -q 75 -r 25
 
 if [ "$1" != "" ];then	qual=$1; fi
 if [ "$2" != "" ];then	frame=$2; fi
