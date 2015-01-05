@@ -1,12 +1,15 @@
 # init notes
 notes_dir=$git_loc/notes/quick/
 last_file_stor=$notes_dir/.last
+arch_file_stor=$notes_dir/archive/
 
 #EDITOR=nano
 
 ! [ -e $last_file_stor ]\
  && mkdir -p $notes_dir\
  && touch $last_file_stor
+
+mkdir -p $arch_file_stor
 
 
 function notes_usage(){
@@ -18,6 +21,7 @@ OPTIONS:
 --last			open last notes file
 --delete file
 --rename file
+--archive file
 
 "
 }
@@ -34,6 +38,7 @@ function notes() {
 		"--last")lst="Y";;
 		"--delete")id=$2;rem="Y";;
 		"--rename")id=$2;rnm_arg=$3;rnm="Y";;
+		"--archive")id=$2;arv="Y";;
 	esac
 
 	[ "$id" = "" ] && notes_usage && return
@@ -50,11 +55,19 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 		file_id=$notes_dir/$id.txt
 	fi
 
+	# Archive
+	if [ -n "$arv" ];then
+		read -p "Archive $id?[y/n] " ans
+		[ "$ans" = "y" ] && mv $file_id $arch_file_stor && echo "DONE"
+		unset rem rnm lst opt id arv
+		return
+	fi
+
 	# Remove
 	if [ -n "$rem" ]; then
 		read -p "Remove $id?[y/n] " ans
 		[ "$ans" = "y" ] && rm $file_id && rm $last_file_stor && echo "DONE"
-		unset rem rnm lst opt id
+		unset rem rnm lst opt id arv
 		return
 	fi
 
@@ -63,7 +76,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 		read -p "Rename $id to $rnm_arg?[y/n] " ans
 		[ "$ans" = "y" ] && mv $file_id "$(dirname $file_id)/$rnm_arg.txt"\
 			&& rm $last_file_stor && echo "DONE"
-		unset rem rnm lst opt id
+		unset rem rnm lst opt id arv
 		return
 	fi
 
@@ -81,9 +94,21 @@ function notes_completion(){
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
 
-	COMPREPLY=( $(compgen -W "$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" -- $cur ) )
+	COMPREPLY=( $(compgen -W "$(ls $notes_dir/*.txt | awk -F$notes_dir '{print $NF}' | sed 's/.txt//g' | sed 's/^\// /g')" -- $cur ) )
 
 	return 0
 }
 
-complete -F notes_completion notes
+function archive_completion(){
+	local cur
+	local dirr
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+	COMPREPLY=( $(compgen -W "$(ls $notes_dir/archive/*.txt | awk -F$notes_dir '{print $NF}' | sed 's/.txt//g' | sed 's/^\// /g')" -- $cur ) )
+
+	return 0
+}
+
+complete -F notes_completion notes 
+#complete -F archive_completion notes archive
