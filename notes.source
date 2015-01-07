@@ -1,7 +1,7 @@
 # init notes
-notes_dir=$git_loc/notes/quick/
+notes_dir=$git_loc/notes/quick
 last_file_stor=$notes_dir/.last
-arch_file_stor=$notes_dir/archive/
+arch_file_stor=$notes_dir/archive
 
 #EDITOR=nano
 
@@ -91,24 +91,35 @@ export -f notes
 
 function notes_completion(){
 	local cur
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-
-	COMPREPLY=( $(compgen -W "$(ls $notes_dir/*.txt | awk -F$notes_dir '{print $NF}' | sed 's/.txt//g' | sed 's/^\// /g')" -- $cur ) )
-
-	return 0
-}
-
-function archive_completion(){
-	local cur
+	local argg
+	local arggtest
 	local dirr
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
 
-	COMPREPLY=( $(compgen -W "$(ls $notes_dir/archive/*.txt | awk -F$notes_dir '{print $NF}' | sed 's/.txt//g' | sed 's/^\// /g')" -- $cur ) )
+	arggtest="${@: -1}"
+	[ "$arggtest" != "" ] && argg=$arggtest
+
+
+	if [ "$argg" = "/" ]; then
+		COMPREPLY=( $(compgen -W "$(ls -d $notes_dir/*/ | awk -F$notes_dir '{print $NF}' | sed 's/^\///' | sed 's/\/$//')" -- $cur ) )
+	else
+		dirr=$notes_dir/$argg/
+		! [ -d $dirr ] && dirr=$notes_dir	# reset for false folder
+	
+#		[ $# -gt 2 ] && dirr=$notes_dir		# reset for too many args
+
+#		echo "$arg - $dirr - $arggtest">&2
+	
+		COMPREPLY=( $(compgen -W "$(ls $dirr/*.txt\
+ | awk -F'/' '{print $NF}'\
+ | sed 's/.txt//g'\
+ )" -- $cur ) )
+
+	fi
+
 
 	return 0
 }
 
 complete -F notes_completion notes 
-#complete -F archive_completion notes archive
