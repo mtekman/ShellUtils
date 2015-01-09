@@ -19,16 +19,16 @@ id(s)="$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" NEW
 
 OPTIONS:
 --last			open last notes file
---delete file
---rename file
---archive file
+--delete id
+--rename id
+--archive id <folder>
 
 "
 }
 
 function notes() {
 
-	local rem rnm_arg rnm arv arc lst id opt
+	local rem rnm_arg rnm arv arc lst id opt arv_fold cwd_fold
 
 	[ $# -lt 1 ] && notes_usage && return
 
@@ -39,29 +39,34 @@ function notes() {
 		"--last")lst="Y";;
 		"--delete")id=$2;rem="Y";;
 		"--rename")id=$2;rnm_arg=$3;rnm="Y";;
-		"--archive")id=$2;arv="Y";;
-		"archive")id=$2;arc="Y"
+		"--archive")arv_fold=$3;id=$2;arv="Y";;
 	esac
 
-	[ "$id" = "" ] && notes_usage && return
-	file_id=$notes_dir/$id.txt
-    [ -n "$arc" ] && file_id=$arch_file_stor/$id.txt
+	# Check if folder exists for opt arg
+	cwd_fold=$notes_dir/
+	[ -d $notes_dir/$opt ] && cwd_fold=$notes_dir/$opt && id=$2
 
 	# Last
 	if [ -n "$lst" ]; then
 		! [ -e $last_file_stor ]\
 		 && echo "No last notes file found, please choose from:
-$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"
+$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 #		 && unset rem rnm lst opt id && return
 
-		id=$(cat $last_file_stor)
-		file_id=$notes_dir/$id.txt
+		file_id=$(cat $last_file_stor)
+#		file_id=$notes_dir/$id.txt
 	fi
+
+	[ "$id" = "" && "$file_id"="" ] && notes_usage && return
+	file_id=$cwd_fold/$id.txt
+
 
 	# Archive
 	if [ -n "$arv" ];then
-		read -p "Archive $id?[y/n] " ans
-		[ "$ans" = "y" ] && mv $file_id $arch_file_stor && echo "DONE"
+		cwd_fold=$notes_dir/$arv_fold/
+		mkdir -p $cwd_fold
+		read -p "Archive $id? --> $arv_fold/$id [y/n] " ans
+		[ "$ans" = "y" ] && mv $file_id $cwd_fold/ && echo "DONE"
 #		unset rem rnm lst opt id arv
 		return
 	fi
@@ -86,7 +91,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"
 	! [ -e $file_id ] && echo -e "$id\n==============\n" > $file_id
 
 	$EDITOR $file_id
-	echo $id > $last_file_stor
+	echo $file_id > $last_file_stor
 #	unset rem rnm lst opt id
 }
 export -f notes
