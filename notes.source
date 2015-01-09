@@ -13,7 +13,7 @@ mkdir -p $arch_file_stor
 
 
 function notes_usage(){
-	echo "	notes < id | OPTIONS>
+	echo "	notes [folder] < id | OPTIONS>
 
 id(s)="$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" NEW
 
@@ -28,6 +28,7 @@ OPTIONS:
 
 function notes() {
 
+	local rem rnm_arg rnm arv arc lst id opt
 
 	[ $# -lt 1 ] && notes_usage && return
 
@@ -39,17 +40,19 @@ function notes() {
 		"--delete")id=$2;rem="Y";;
 		"--rename")id=$2;rnm_arg=$3;rnm="Y";;
 		"--archive")id=$2;arv="Y";;
+		"archive")id=$2;arc="Y"
 	esac
 
 	[ "$id" = "" ] && notes_usage && return
 	file_id=$notes_dir/$id.txt
+    [ -n "$arc" ] && file_id=$arch_file_stor/$id.txt
 
 	# Last
 	if [ -n "$lst" ]; then
 		! [ -e $last_file_stor ]\
 		 && echo "No last notes file found, please choose from:
-$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
-		 && unset rem rnm lst opt id && return
+$(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"
+#		 && unset rem rnm lst opt id && return
 
 		id=$(cat $last_file_stor)
 		file_id=$notes_dir/$id.txt
@@ -59,7 +62,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 	if [ -n "$arv" ];then
 		read -p "Archive $id?[y/n] " ans
 		[ "$ans" = "y" ] && mv $file_id $arch_file_stor && echo "DONE"
-		unset rem rnm lst opt id arv
+#		unset rem rnm lst opt id arv
 		return
 	fi
 
@@ -67,7 +70,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 	if [ -n "$rem" ]; then
 		read -p "Remove $id?[y/n] " ans
 		[ "$ans" = "y" ] && rm $file_id && rm $last_file_stor && echo "DONE"
-		unset rem rnm lst opt id arv
+#		unset rem rnm lst opt id arv
 		return
 	fi
 
@@ -76,7 +79,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 		read -p "Rename $id to $rnm_arg?[y/n] " ans
 		[ "$ans" = "y" ] && mv $file_id "$(dirname $file_id)/$rnm_arg.txt"\
 			&& rm $last_file_stor && echo "DONE"
-		unset rem rnm lst opt id arv
+#		unset rem rnm lst opt id arv
 		return
 	fi
 
@@ -84,16 +87,14 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')"\
 
 	$EDITOR $file_id
 	echo $id > $last_file_stor
-	unset rem rnm lst opt id
+#	unset rem rnm lst opt id
 }
 export -f notes
 
 
 function notes_completion(){
-	local cur
-	local argg
-	local arggtest
-	local dirr
+	local cur argg arggtest dirr
+
 	COMPREPLY=()
 	cur=${COMP_WORDS[COMP_CWORD]}
 
