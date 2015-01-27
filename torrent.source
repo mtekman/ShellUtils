@@ -41,8 +41,10 @@ function torrentAdd(){
 Sends a list of .torrent files to the homeserver watch directory to 
 begin downloading " && return
 
-	eval $scp "$1" $hs_addr:$hs_watch/
+	eval $scp "$*" $hs_addr:$hs_watch/
 }
+
+complete -f -X '!*.torrent' torrentAdd
 
 
 function torrentDel(){
