@@ -55,3 +55,27 @@ matching any of the names in the name list" && return
 
 	$ssh $hs_addr "cd $hs_watch; for nam in $*; do rm -i \".*$nam.*\"; done"
 }
+
+
+function bettername(){
+[ $# -lt 1 ] && echo "bettername <filename>
+
+Renames a given filename (whilst preserving extension) to one which can be more easily interpreted as a single word " && return
+
+local ans file newname
+
+file="$*"
+! [ -e "$file" ] && echo "File does not exist!" && return
+
+newname=$(echo $file\
+ | sed 's:[^A-Za-z0-9./]:_:g'\
+ | sed 's/_*_/_/g'\
+ | sed 's/^_//g'\
+ | sed 's/_\./\./g' )
+
+read -p "Rename $file
+  -> $newname? " ans
+
+[ "$ans" = "y" ] && mv "$file" $newname && echo "MOVED"
+
+}

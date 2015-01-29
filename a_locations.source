@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Needs to be one of the fist scripts loaded for a few of the rest to work
+#
 
 
 # List of mounts across systems -- git_location:starting_dir
