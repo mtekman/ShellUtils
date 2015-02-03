@@ -17,7 +17,7 @@ loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents
 
 #   gintoki		 - NAS
 loc_array[Aurora]="( $HOME/personal_scripts/  $HOME/ $txtwht )"
-loc_array[tetro]="( $HOME/personal_scripts/  $HOME/ $txtwht )"
+loc_array[tetro]=${loc_array[Aurora]}
 
 
 #   coppertop/tower - WorkDesk
@@ -26,8 +26,7 @@ loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Documents $tx
 
 #   pythag/memo-powerdge - Workhorse1
 #   leiniz 		 - Workhorse2
-loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ 
-$HOME/Desktop/Linkage/ $bldred )"
+loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ $HOME/Desktop/Linkage/ $bldred )"
 loc_array[memo-PowerEdge-R710]=${loc_array[pythagoras]}
 loc_array[Leibniz]=${loc_array[pythagoras]}
 
