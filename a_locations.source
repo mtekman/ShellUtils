@@ -37,7 +37,7 @@ loc_array[jaeger]=${loc_array[Ev]}
 
 
 host=$(hostname)
-valid_machine=(${loc_array[$host]})
+valid_machine=( ${loc_array[$host]} )
 
 if [ "$valid_machine" != "" ]; then
 #	echo "$host = ${valid_machine[1]}, ${valid_machine[2]}"
