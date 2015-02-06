@@ -21,7 +21,7 @@ loc_array[tetro]=${loc_array[Aurora]}
 
 
 #   coppertop/tower - WorkDesk
-loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Documents $txtylw )"
+loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
 loc_array[hiroki]=${loc_array[coppertop]}
 
 
