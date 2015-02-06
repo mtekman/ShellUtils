@@ -22,6 +22,7 @@ loc_array[tetro]=${loc_array[Aurora]}
 
 #   coppertop/tower - WorkDesk
 loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Documents $txtylw )"
+loc_array[hiroki]=${loc_array[coppertop]}
 
 
 #   pythag/memo-powerdge - Workhorse1
@@ -43,7 +44,7 @@ if [ "$valid_machine" != "" ]; then
 #	echo "$host = ${valid_machine[1]}, ${valid_machine[2]}"
 	export git_loc="${valid_machine[1]}"
 	export start_dir="${valid_machine[2]}"
-	export hostcolor="${valid_machine[3]}"
+	export hostcolor="${valid_machine[4]}"
 else
 	echo "Could not find mount points for hostname:\"$host\""
 fi
