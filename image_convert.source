@@ -45,7 +45,7 @@ function converter(){
 	outfile=$2
 	delay="-delay 1x"$3
 
-	convert -coalesce -layers OptimizeTransparency $delay $inp_prefix"*.png" 
+	convert -coalesce -layers OptimizeTransparency $delay "$inp_prefix*.png" $outfile
 
 }
 

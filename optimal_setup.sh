@@ -22,13 +22,17 @@ mplayer_win=$(xdotool search --name mplayer2)
 firefox_win=$(xdotool search --name Mozilla)
 lightab_win=$(xdotool search --name "Light Table")
 
-[ "$firefox_win" = "" ] && firefox &
-firefox_win=$(xdotool search --name Mozilla)
+[ "$firefox_win" = "" ] && firefox & pid1=$!
+[ "$lightab_win" = "" ] && ~/Programs/LightTable/LightTable && sleep 5
 
-[ "$lightab_win" = "" ] && ~/Programs/LightTable/LightTable &
+[ "$pid1" != "" ] && wait $pid1
+
+
+firefox_win=$(xdotool search --name Mozilla)
 lightab_win=$(xdotool search --name "Light Table")
 
-
-winGeom $mplayer_win 0    0     $h_w  $h_h
-winGeom $firefox_win 0    $h_h  $h_w  $h_h
-winGeom $lightab_win $h_w 0     $h_w  $height
+winGeom $mplayer_win 0 0 $h_w $h_h 2>/dev/null
+sleep 1
+winGeom $firefox_win 0 $h_h $h_w $h_h
+sleep 1
+winGeom $lightab_win $h_w 0 $h_w $height

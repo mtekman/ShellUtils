@@ -1,5 +1,9 @@
 function mysetup(){
 	. $git_loc/bash_global/optimal_setup.sh
+	sleep 1
+	. $git_loc/bash_global/optimal_setup.sh
+	sleep 1
+	. $git_loc/bash_global/optimal_setup.sh
 };
 
 
