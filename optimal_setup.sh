@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function largestRez() {
+    avail_rezes=$(xrandr | egrep "\sconnected\s" | egrep -o "[0-9]+x[0-9]+" );
+    total_width=$(( $(echo "$avail_rezes" | awk -F"x" '{print $1}' | tr '\n' "+" | sed 's/\+$//g') ))
+    height=$(echo "$avail_rezes" | awk -F"x" '{print $2}' | head -1)
+    echo "$total_width $height"
+}
+
+
 function winGeom(){
 	if [ "$1" != "" ]; then
 		xdotool windowmove $1 $2 $3
@@ -9,7 +17,8 @@ function winGeom(){
 
 
 
-rez=$(xdotool getdisplaygeometry)
+rez=$(largestRez)
+
 width=$(echo $rez | awk '{print $1}')
 height=$(echo $rez | awk '{print $2}')
 

@@ -13,12 +13,14 @@ max_res=0
 device_list=[]
 
 while index < len(text):
-	t = text[index]
+	t =     text[index]
 	tokes = t.split()
-	status=tokes[1].strip()
-	dev = tokes[0].strip()
+	status= tokes[1].strip()
+	dev =   tokes[0].strip()
 
-	if status=="connected":
+	if status == "connected":
+#		print tokes
+#		continue
 		device_list.append(dev)
 		max = text[index+1].split()[0]
 #		print max
