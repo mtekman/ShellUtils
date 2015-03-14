@@ -33,8 +33,6 @@ cat hardcopy.0\
 
 }
 
-
-
 function torrentAdd(){
 	[ $# -lt 1 ] && echo "torrentAdd <torrent list>
 
@@ -55,6 +53,15 @@ matching any of the names in the name list" && return
 
 	$ssh $hs_addr "cd $hs_watch; for nam in $*; do rm -i \".*$nam.*\"; done"
 }
+
+function torrentGrab(){
+	[ $# -lt 1 ] && echo "torrentGrab \"<regex>\"
+
+Grabs a complete torrent" && return;
+
+	rsync -avP tetris@gintoki::grab_torrent/$* ./
+}
+
 
 
 function bettername(){
