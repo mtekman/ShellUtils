@@ -74,7 +74,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 	# Remove
 	if [ -n "$rem" ]; then
 		read -p "Remove $id?[y/n] " ans
-		[ "$ans" = "y" ] && rm $file_id && rm $last_file_stor && echo "DONE"
+		[[ "$ans" = "y" ]] && rm $file_id && rm $last_file_stor && echo "DONE"
 #		unset rem rnm lst opt id arv
 		return
 	fi
