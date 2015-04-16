@@ -1,5 +1,5 @@
 #!/bin/bash
-ignoredir=~/Documents/REPOS/.ignore/
+ignoredir=/nomansland/REPOS/.ignore/
 
 
 youstream(){
@@ -96,7 +96,7 @@ lastTouched() {
 }
 
 lastComics() {
-  lastTouched comix $ignoredir/zips
+  lastTouched mcomix $ignoredir/zips
 }
 
 firstTouched() {
