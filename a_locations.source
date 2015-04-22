@@ -24,8 +24,8 @@ loc_array[tetro]=${loc_array[Aurora]}
 
 
 #   coppertop/tower - WorkDesk
-loc_array[coppertop]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
-loc_array[hiroki]=${loc_array[coppertop]}
+loc_array[copper]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
+loc_array[hiroki]=${loc_array[copper]}
 
 
 #   pythag/memo-powerdge - Workhorse1
