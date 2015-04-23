@@ -29,10 +29,10 @@ h_h=$(echo "$height / 2" | bc)
 
 mplayer_win=$(xdotool search --name mplayer2)
 firefox_win=$(xdotool search --name Mozilla)
-lightab_win=$(xdotool search --name "Light Table")
+lightab_win=$(xdotool search --name "Sublime")
 
 [ "$firefox_win" = "" ] && firefox & pid1=$!
-[ "$lightab_win" = "" ] && ~/Programs/LightTable/LightTable && sleep 5
+[ "$lightab_win" = "" ] && ~/Programs/Sublime\ Text\ 2/sublime_text && sleep 5
 
 [ "$pid1" != "" ] && wait $pid1
 
