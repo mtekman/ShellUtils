@@ -5,7 +5,12 @@
 
 
 # List of mounts across systems -- git_location:starting_dir
-declare -A loc_array
+declare -A loc_array 2> /dev/null
+
+if [ "$?" = "2" ]; then
+    # DEFAULTS
+    loc_array="( /nomansland/REPOS/personal_scripts/ $HOME/ $txtred )"
+else
 
 # Trusted Machine list:
 #   shiroe/N900		 - Phone
@@ -27,7 +32,6 @@ loc_array[tetro]=${loc_array[Aurora]}
 loc_array[copper]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
 loc_array[hiroki]=${loc_array[copper]}
 
-
 #   pythag/memo-powerdge - Workhorse1
 #   leiniz 		 - Workhorse2
 loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ $HOME/Desktop/Linkage/ $bldred )"
@@ -39,18 +43,20 @@ loc_array[Leibniz]=${loc_array[pythagoras]}
 loc_array[Ev]="( $HOME/REPOS/personal_scripts/ $HOME/ $txtylw )"
 loc_array[jaeger]=${loc_array[Ev]}
 
+fi
+
 
 host=$(hostname)
 valid_machine=( ${loc_array[$host]} )
 
-if [ "$valid_machine" != "" ]; then
+#if [ "$valid_machine" != "" ]; then
 #	echo "$host = ${valid_machine[1]}, ${valid_machine[2]}"
 	export git_loc="${valid_machine[1]}"
 	export start_dir="${valid_machine[2]}"
 	export hostcolor="${valid_machine[4]}"
-else
-	echo "Could not find mount points for hostname:\"$host\""
-fi
+#else
+#	echo "Could not find mount points for hostname:\"$host\""
+#fi
 
 alias personal="cd $git_loc"
 alias keto="cd $git_loc/exoz/ketologger;"
