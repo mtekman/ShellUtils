@@ -32,6 +32,9 @@ loc_array[tetro]=${loc_array[Aurora]}
 loc_array[copper]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
 loc_array[hiroki]=${loc_array[copper]}
 
+# jolla
+loc_array[Jolla]="( /nomansland/REPOS/personal_scripts/  $HOME/ $txtylw )"
+
 #   pythag/memo-powerdge - Workhorse1
 #   leiniz 		 - Workhorse2
 loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ $HOME/Desktop/Linkage/ $bldred )"
