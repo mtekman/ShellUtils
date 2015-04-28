@@ -32,7 +32,7 @@ firefox_win=$(xdotool search --name Mozilla)
 lightab_win=$(xdotool search --name "Sublime")
 
 [ "$firefox_win" = "" ] && firefox & pid1=$!
-[ "$lightab_win" = "" ] && ~/Programs/Sublime\ Text\ 2/sublime_text && sleep 5
+[ "$lightab_win" = "" ] && ~/Programs/Sublime\ Text\ 2/sublime_text & sleep 5
 
 [ "$pid1" != "" ] && wait $pid1
 
