@@ -20,6 +20,20 @@ socratssh (){
 	ssh -A -t "`user_local $user`" -p $port $args;
 }
 
+socratconnect (){
+	[ $# -lt 1 ] && echo "Connects to a reverse ssh session previosly initiated by 
+a remote user rfh for a given port.
+
+	usage: socratssh <port> \"[extra commands]\"
+" && return
+	
+	port=$1
+	commands=$2
+
+	expect -f $git_loc/bash_global/login_socrates_remote.expect $port "$commands"
+}
+
+
 evssh (){ ssh -A -t $ev -X ssh -A -t "`user_local $1`" -p 1947 -X; }
 
 
