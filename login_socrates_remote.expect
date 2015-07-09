@@ -1,0 +1,57 @@
+#!/usr/bin/expect -f
+
+set password1 "Sh0rt*s;"
+set password2 "r0y4lfr33rul35"
+
+# On a given port
+set portarg [lindex $argv 0]
+set comms [lindex $argv 1]
+if { $portarg == "" } { set portarg 9999}
+
+spawn ssh -A -t zcapdd1@socrates.ucl.ac.uk -X \
+ssh -A -t "rfh@localhost" -p $portarg -X;
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+#   login with keys (first time verification)
+expect {
+  "> " { }
+  "$ " { }
+  "assword: " { 
+        send "$password1\n"
+        expect {
+          "% " { }
+          "$ " { }
+	  "assword: " {
+		send "$password2\n"
+		if { $comms != "" } {
+			expect {
+			 "$ " { send "$comms\n" }
+			}
+		}
+		interact
+  	   }
+        }
+  }
+  "(yes/no)? " { 
+        send "yes\n"
+	expect {
+	  "> " { }
+	  "$ " { }
+	  "assword: " { 
+	        send "$password1\n"
+	        expect {
+	          "% " { }
+	          "$ " { }
+		  "assword: " { send "$password2\n" }
+	        }
+  	   }
+	}
+  }
+  default {
+        send_user "Login failed\n"
+        exit
+  }
+}
+
