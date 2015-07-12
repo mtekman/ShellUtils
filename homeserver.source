@@ -30,6 +30,8 @@ a remote user rfh for a given port.
 	port=$1
 	commands=$2
 
+	[ "$commands" = "" ] && commands="screen -r rme;[ \$? = 1 ] && screen -S rme"
+
 	expect -f $git_loc/bash_global/login_socrates_remote.expect $port "$commands"
 }
 
