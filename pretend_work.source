@@ -1,17 +1,92 @@
 #!/bin/bash
 
 declare -a progress;
-progress=("-" "/" "|" "\\")
+
+progress=( 
+#◡◡ ⊙⊙ ◠◠
+#← ↖ ↑ ↗ → ↘ ↓ ↙
+#▖ ▘ ▝ ▗
+#◢ ◣ ◤ ◥ 
+#◰ ◳ ◲ ◱ 
+#◴ ◷ ◶ ◵
+#◐ ◓ ◑ ◒ 
+#⠈ ⠐ ⠠ ⢀  ⡀ ⠄ ⠂ ⠁
+#▁ ▂ ▃ ▄ ▅ ▆ ▇ █ ▇ ▆ ▅ ▄ ▃ ▁
+#▉ ▊ ▋ ▌ ▍ ▎ ▏ ▎ ▍ ▌ ▋ ▊ ▉
+#┤ ┘ ┴ └ ├ ┌ ┬ ┐
+#⣾ ⣽ ⣻ ⢿ ⡿ ⣟ ⣯ ⣷
+#◴ ◓ ◷ ◑ ◶ ◒  ◵ ◐
+⠈◴ ⠂◒ ⠠◷ ⡀◐ ⢀◶ ⠄◓ ⠐◵ ⠈◑
+ )
+
+prog_len=${#progress[@]}
 
 #declare -a mystery_text
 
+function findrin()
+{
+	scan_wait_lower=$1
+	scan_wait_upper=$2
+
+	[ "$scan_wait_lower" = "" ] && scan_wait_lower=20
+	[ "$scan_wait_upper" = "" ] && scan_wait_upper=30
+
+	echo -en "Initialising:\n  *\tconnecting to news feeds..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t[x]\n  *\tstarting crawler..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t\t[x]\n  *\tparsing links..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t\t[x]\n  *\tstream quality..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	fract="$RANDOM/$RANDOM"
+	actual_fract=$(echo "scale=2; if ( $fract > 1 ) print \"high\" else print \"low\"" | bc)
+	echo -en "($fract)\t[$actual_fract]\n"
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+	echo -e "\nBegin:"
+
+	while :; do
+
+		max_loops=$(( 5 + ($RANDOM % 5) ))
+
+		while [ $max_loops -gt 0 ]; do
+			waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
+			scanning $waiter
+			max_loops=$(( $max_loops - 1 ))
+#			echo $waiter $max_loops
+		done
+
+		echo -en "[connection dropped] - reconnecting..."
+		sleep `echo "1 + ($RANDOM % 3)" | bc`
+		echo -e "\t[x]"
+
+
+	done
+}
+
+
+
 function scanning(){
 	interval=$1
-	echo -n "-- scanning..."
+
+
+	matcher="(2[1-9a-f])|([3-6][0-9a-f])|(7[0-9a-c])"
+	regex="\
+(\
+ ((\s|^)($matcher){2})\
+|(($matcher){2}(\s|\$))\
+|(($matcher)(\s)($matcher))\
+)"
+
+	echo -n "-- seeking..."
 
 	while [ $interval -gt 0 ]; do
-		echo -en "\r\t\t${progress[$interval%4]}";
-		sleep 0.2;
+		echo -en "\r\t\t${progress[$interval%$prog_len]} \r";
+		sleep 0.1;
 		interval=$(( $interval - 1 ));
 	done
 	echo -e "\r\t\tmatched: $(( $RANDOM / 100 ))"
@@ -24,43 +99,14 @@ function scanning(){
 '
 	for line in $hexes; do
 		mystery_word=$(fortune -n 50 | head -1 | egrep -o "(\s|^)[a-z]{5,8}(\s|$)" | head -1)
+#		matches=$(echo $line | egrep -o "($matcher)" )
+#		echo $matches >> test
 #		mystery_word=${mystery_text[$RANDOM%300]}
-		echo $line\
-		 | sed "s/\$/ $mystery_word/"\
-		 | egrep --color=always "\s[a-f].*[6-9]\s"
+		line=$(echo $line | sed "s/\$/ $mystery_word/" )
+		echo $line | egrep --color=always "$regex"
+#| egrep --color=always "\s[a-f].*[6-9]\s"
 	done;
+
 	IFS=$OLDIFS
 	echo ""
-}
-
-
-function findrin()
-{
-	scan_wait_lower=$1
-	scan_wait_upper=$2
-
-	[ "$scan_wait_lower" = "" ] && scan_wait_lower=20
-	[ "$scan_wait_upper" = "" ] && scan_wait_upper=30
-
-	echo -en "Initialising:\n\tconnecting to news feeds..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t[x]\n\tstarting crawler..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t\t[x]\n\tparsing links..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t\t[x]\n\tstream quality..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "($RANDOM/$RANDOM)\t[good]\n"
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-	echo -e "\nBegin:"
-
-	while :; do
-		waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
-		echo $waiter
-		scanning $waiter
-	done
 }
