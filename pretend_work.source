@@ -1,0 +1,66 @@
+#!/bin/bash
+
+declare -a progress;
+progress=("-" "/" "|" "\\")
+
+#declare -a mystery_text
+
+function scanning(){
+	interval=$1
+	echo -n "-- scanning..."
+
+	while [ $interval -gt 0 ]; do
+		echo -en "\r\t\t${progress[$interval%4]}";
+		sleep 0.2;
+		interval=$(( $interval - 1 ));
+	done
+	echo -e "\r\t\tmatched: $(( $RANDOM / 100 ))"
+
+
+
+	hexes="$(cat /dev/urandom | head -c 64 | hexdump | head -4 | sed -e 's/^000[0-9]*\s//')"
+	OLDIFS=$IFS
+	IFS='
+'
+	for line in $hexes; do
+		mystery_word=$(fortune -n 50 | head -1 | egrep -o "(\s|^)[a-z]{5,8}(\s|$)" | head -1)
+#		mystery_word=${mystery_text[$RANDOM%300]}
+		echo $line\
+		 | sed "s/\$/ $mystery_word/"\
+		 | egrep --color=always "\s[a-f].*[6-9]\s"
+	done;
+	IFS=$OLDIFS
+	echo ""
+}
+
+
+function findrin()
+{
+	scan_wait_lower=$1
+	scan_wait_upper=$2
+
+	[ "$scan_wait_lower" = "" ] && scan_wait_lower=20
+	[ "$scan_wait_upper" = "" ] && scan_wait_upper=30
+
+	echo -en "Initialising:\n\tconnecting to news feeds..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t[x]\n\tstarting crawler..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t\t[x]\n\tparsing links..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "\t\t[x]\n\tstream quality..."
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+
+	echo -en "($RANDOM/$RANDOM)\t[good]\n"
+	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+	echo -e "\nBegin:"
+
+	while :; do
+		waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
+		echo $waiter
+		scanning $waiter
+	done
+}
