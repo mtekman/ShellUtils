@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function fuck() {
   if [ $# = 0 ]; then
      echo "fuck."
@@ -46,3 +47,7 @@ function brightness() {
 		sudo sh -c "echo $lvl > $f"
 	done
 }
+
+
+#function digitalrain(){
+#}
