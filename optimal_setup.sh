@@ -57,19 +57,19 @@ pomodor=tomate
 # Initial scan
 f_win=$(waitWindow Mozilla 1)
 s_win=$(waitWindow Sublime 1)
-p_win=$(waitWindow Tomate 1)
+#p_win=$(waitWindow Tomate 1)
 
 # Spawn those not up
-[ "$f_win" = "" ] && $firefox &
-[ "$s_win" = "" ] && $sublime &
-[ "$p_win" = "" ] && $pomodor &
+[ "$f_win" = "" ] && nohup $firefox 2>/dev/null &
+[ "$s_win" = "" ] && nohup $sublime 2>/dev/null &
+#[ "$p_win" = "" ] && $pomodor &
 
 sleep 1
 
 # Poll until exists
 f_win=$(waitWindow Mozilla)
 s_win=$(waitWindow Sublime)
-p_win=$(waitWindow Tomate)
+#p_win=$(waitWindow Tomate)
 
 
 winGeom $s_win 0 0 $h_w $height
@@ -78,5 +78,5 @@ sleep 1
 y_div=$(( $height - 100 ))
 
 winGeom $f_win $h_w 0 $h_w $y_div
-sleep 1
-winGeom $p_win $h_ $y_div
+#sleep 1
+#winGeom $p_win $h_ $y_div
