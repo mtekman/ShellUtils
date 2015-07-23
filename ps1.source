@@ -9,15 +9,15 @@ if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print 
 fi
 
 # Are we screened?
-[ "$STY" != "" ]  && screener="_$(echo $STY | awk -F'.' '{print $NF}' )_"
+intro="\[$bldred\]\u"
+[ "$STY" != "" ]  && intro="[$(echo $STY | awk -F'.' '{print $NF}' )]"
 
 
 
 PROMPT_DIRTRIM=2
 
 PS1="\
-\[$bldred\]\
-\u\
+$intro\
 \[$txtylw\]@\
 \[$hostcolor\]\
 \h\
@@ -28,7 +28,11 @@ PS1="\
 \[$txtrst\]\
 \[$ending\] \
 \[$txtrst\]\
-\033[s\
-\r\
-\[$screener\]\
-\033[u"
+"
+
+#\033[s\
+#\r\
+#\[$screener\]\
+#\033[u\
+
+PS1='\[\e[$LINES;1H\]'$PS1

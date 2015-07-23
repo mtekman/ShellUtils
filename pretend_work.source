@@ -1,47 +1,41 @@
 #!/bin/bash
 
-declare -a progress;
-
-progress=( 
-#◡◡ ⊙⊙ ◠◠
-#← ↖ ↑ ↗ → ↘ ↓ ↙
-#▖ ▘ ▝ ▗
-#◢ ◣ ◤ ◥ 
-#◰ ◳ ◲ ◱ 
-#◴ ◷ ◶ ◵
-#◐ ◓ ◑ ◒ 
-#⠈ ⠐ ⠠ ⢀  ⡀ ⠄ ⠂ ⠁
-#▁ ▂ ▃ ▄ ▅ ▆ ▇ █ ▇ ▆ ▅ ▄ ▃ ▁
-#▉ ▊ ▋ ▌ ▍ ▎ ▏ ▎ ▍ ▌ ▋ ▊ ▉
-#┤ ┘ ┴ └ ├ ┌ ┬ ┐
-#⣾ ⣽ ⣻ ⢿ ⡿ ⣟ ⣯ ⣷
-#◴ ◓ ◷ ◑ ◶ ◒  ◵ ◐
-⠈◴ ⠂◒ ⠠◷ ⡀◐ ⢀◶ ⠄◓ ⠐◵ ⠈◑
- )
-
-prog_len=${#progress[@]}
-
-#declare -a mystery_text
+function randomwait(){
+        sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+#	sleep 0.1
+}
 
 function findrin()
 {
+	declare -a progress;
+	progress=( 
+" ----->"
+"-----} "
+"----)  "
+"--->   "
+"--}   -"
+"-)   --"
+">   ---"
+"   ----"
+"  -----"
+#" ----->"
+#"        " "-   " "<-- " " {--" "  (-" "   {"
+	)
+
+	prog_len=${#progress[@]}
+	
+#	tput civis
+
 	scan_wait_lower=$1
 	scan_wait_upper=$2
 
-	[ "$scan_wait_lower" = "" ] && scan_wait_lower=20
-	[ "$scan_wait_upper" = "" ] && scan_wait_upper=30
+	[ "$scan_wait_lower" = "" ] && scan_wait_lower=0
+	[ "$scan_wait_upper" = "" ] && scan_wait_upper=50
 
-	echo -en "Initialising:\n  *\tconnecting to news feeds..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t[x]\n  *\tstarting crawler..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t\t[x]\n  *\tparsing links..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
-
-	echo -en "\t\t[x]\n  *\tstream quality..."
-	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
+	echo -en "Initialising:\n  *\tconnecting to news feeds..." && randomwait
+	echo -en "\t[x]\n  *\tstarting crawler..." && randomwait
+	echo -en "\t\t[x]\n  *\tparsing links..." && randomwait
+	echo -en "\t\t[x]\n  *\tstream quality..." && randomwait
 
 	fract="$RANDOM/$RANDOM"
 	actual_fract=$(echo "scale=2; if ( $fract > 1 ) print \"high\" else print \"low\"" | bc)
@@ -60,19 +54,35 @@ function findrin()
 #			echo $waiter $max_loops
 		done
 
-		echo -en "[connection dropped] - reconnecting..."
-		sleep `echo "1 + ($RANDOM % 3)" | bc`
-		echo -e "\t[x]"
+		progressdots `echo "20 + ($RANDOM % 20)" | bc` "$bldred[ connection dropped ] - reconnecting$txtrst""---" 5
+		echo -e "\t\t\t\t\t[x]      "
 
 
 	done
 }
 
 
+function progressdots(){
+	interval=$1
+	pre_message="$2"
+
+	tbs=$3
+	tabs=""
+	[ "$tbs" = "" ] && tbs=2
+	while [ $tbs -gt 0 ];do tabs=$tabs"\t"; tbs=$(( $tbs - 1 )); done
+
+	echo -en "$pre_message"
+
+	while [ $interval -gt 0 ]; do
+		echo -en "\r$tabs""${progress[$interval%$prog_len]} \r";
+		sleep 0.15;
+		interval=$(( $interval - 1 ));
+	done
+}
+
 
 function scanning(){
 	interval=$1
-
 
 	matcher="(2[1-9a-f])|([3-6][0-9a-f])|(7[0-9a-c])"
 	regex="\
@@ -82,23 +92,15 @@ function scanning(){
 |(($matcher)(\s)($matcher))\
 )"
 
-	echo -n "-- seeking..."
-
-	while [ $interval -gt 0 ]; do
-		echo -en "\r\t\t${progress[$interval%$prog_len]} \r";
-		sleep 0.1;
-		interval=$(( $interval - 1 ));
-	done
+	progressdots $interval "--> seeking..."
 	echo -e "\r\t\tmatched: $(( $RANDOM / 100 ))"
-
-
 
 	hexes="$(cat /dev/urandom | head -c 64 | hexdump | head -4 | sed -e 's/^000[0-9]*\s//')"
 	OLDIFS=$IFS
 	IFS='
 '
 	for line in $hexes; do
-		mystery_word=$(fortune -n 50 | head -1 | egrep -o "(\s|^)[a-z]{5,8}(\s|$)" | head -1)
+		mystery_word=$(fortune -n 50 | head -1 | egrep -o "(\s|^|[a-z])[a-z]{3,8}([a-z]|\s|$)" | head -1)
 #		matches=$(echo $line | egrep -o "($matcher)" )
 #		echo $matches >> test
 #		mystery_word=${mystery_text[$RANDOM%300]}
