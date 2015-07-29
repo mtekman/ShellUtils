@@ -10,7 +10,7 @@ fi
 
 # Are we screened?
 intro="\[$bldred\]\u"
-[ "$STY" != "" ]  && intro="[$(echo $STY | awk -F'.' '{print $NF}' )]"
+#[ "$STY" != "" ]  && intro="[$(echo $STY | awk -F'.' '{print $NF}' )]"
 
 
 
@@ -35,4 +35,4 @@ $intro\
 #\[$screener\]\
 #\033[u\
 
-PS1='\[\e[$LINES;1H\]'$PS1
+#PS1='\[\e[$LINES;1H\]'$PS1
