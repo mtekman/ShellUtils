@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function fancydesktop(){
+	if [ "$(uname -r | awk -F'-' '{print $NF}')" != "ARCH" ]; then
+		echo "This only works on Arch, sorry" >&2 && return
+	fi
+
+	nohup compiz ccp --replace 2>/dev/null &
+	nohup exec cairo-dock & 2>/dev/null	
+}
