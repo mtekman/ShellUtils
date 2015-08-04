@@ -1,5 +1,8 @@
 ## FFMPEG ##################################################
 
+ffbin=ffmpeg
+pybin=python2
+
 # constants
 donekey="_OUT"  # This means that this vid has already been 
                 # processed and can be skipped from further selection
@@ -13,7 +16,7 @@ vidsize() {
   ffprobe $1 2>&1 | grep Video: | awk -F ", " '{print $3}' | awk '{print $1}'
 }
 vidaspect(){
-  echo $(python -c "w_h=\"`vidsize $1`\".split('x'); print float(w_h[0])/float(w_h[1]);")
+  echo $($pybin -c "w_h=\"`vidsize $1`\".split('x'); print float(w_h[0])/float(w_h[1]);")
 }
 vidheight() {
   echo $(vidsize $1) | awk -F "x" '{print $2}'
@@ -33,7 +36,7 @@ videnc() {
 
 vidCalcHeight() {
    width=$1;ratio=$2;
-   echo $(python -c "h=int(float($width)/float($ratio)); h= (h+1) if (h%2!=0) else h; print h;")
+   echo $($pybin -c "h=int(float($width)/float($ratio)); h= (h+1) if (h%2!=0) else h; print h;")
 } #returns a height divisible by 2 (h264 requirement)
 
 encexists() {
@@ -53,7 +56,7 @@ toNokia() {
     height=$(vidCalcHeight $max_width $aspect)
 
     if [ $width -gt $max_width ]; then
-        avconv -i $file -s $max_width"x"$height -an -q:v 0 -c:v $encoder $rat $outfile"."$container
+        $ffbin -i $file -s $max_width"x"$height -an -q:v 0 -c:v $encoder $rat $outfile"."$container
         
     else
        echo "Skip: $outfile, width=$width, moving to $2"
