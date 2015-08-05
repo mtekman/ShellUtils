@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Are we chrooted?
 ending="\$"
 texter=$txtgrn
@@ -9,15 +10,16 @@ if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print 
 fi
 
 # Are we screened?
-intro="\[$bldred\]\u"
-#[ "$STY" != "" ]  && intro="[$(echo $STY | awk -F'.' '{print $NF}' )]"
+[ "$STY" != "" ]  && screener="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]"
 
 
 
 PROMPT_DIRTRIM=2
 
 PS1="\
-$intro\
+\[$screener\]\
+\[$bldred\]\
+\u\
 \[$txtylw\]@\
 \[$hostcolor\]\
 \h\
@@ -26,13 +28,5 @@ $intro\
 \[$texter\]\
 \w\
 \[$txtrst\]\
-\[$ending\] \
-\[$txtrst\]\
-"
-
-#\033[s\
-#\r\
-#\[$screener\]\
-#\033[u\
-
-#PS1='\[\e[$LINES;1H\]'$PS1
+$ending \
+\[$txtrst\]"
