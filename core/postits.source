@@ -7,8 +7,3 @@ breakloop(){
 reminder(){ 
 	$EDITOR $git_loc/notes/life/reminder_s;
 }
-
-tempo(){
-	cd $git_loc/temp_shares;
-	$EDITOR;
-}

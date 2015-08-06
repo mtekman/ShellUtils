@@ -1,0 +1,49 @@
+
+loadmod(){
+
+	[ $# -lt 1 ] && echo "loadmod <mod folder> [--debug]
+
+Loads .source modules from the bash_global folder" && return
+
+	mod=$1
+	debug=$2
+	[ "$debug" = "--debug" ] && debug="Y" && echo -e "\nloaded $mod:"
+
+	dir="$git_loc/bash_global/$mod/"
+
+	for file in $dir/*.source; do
+		[ "$debug" = "Y" ] && echo -e "\t`echo $file | awk -F/ '{print $NF}'`"
+		. $file
+	done
+
+	[ "$debug" = "Y" ] && echo ""
+
+	unset dir debug mod
+}
+
+
+module_completion()
+{
+	mod_dir=$git_loc/bash_global/
+
+	local cur argg arggtest dirr
+
+	COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    arggtest="${@: -1}"
+    [ "$arggtest" != "" ] && argg=$arggtest
+
+#    if [ "$argg" = "/" ]; then
+#        COMPREPLY=( $(compgen -W "$(ls -d $mod_dir/*/ | awk -F'/' '{print $NF}' )" -- $cur ) )
+#    else
+        dirr=$mod_dir/$argg/
+        ! [ -d $dirr ] && dirr=$mod_dir   # reset for false folder
+    
+		COMPREPLY=( $(compgen -W "$(find $dirr -type d | awk -F$dirr '{print $NF}')" -- $cur ) )
+#    fi
+
+    return 0
+}
+
+complete -F module_completion loadmod
