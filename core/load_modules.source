@@ -1,4 +1,15 @@
-git_loc=`dirname $0`/../
+#!/bin/bash
+#git_loc=`dirname $0`/../ #  -> a_locations.source has this
+
+
+MODULES_LOADED=" "
+
+
+showmods(){
+	echo "$MODULES_LOADED"\
+ | sed 's/.source//g'\
+ | sed 's/\s/\n - /g'
+}
 
 loadmod(){
 
@@ -15,6 +26,7 @@ Loads .source modules from the bash_global folder" && return
 	for file in $dir/*.source; do
 		[ "$debug" = "Y" ] && echo -e "\t`echo $file | awk -F/ '{print $NF}'`"
 		. $file
+		MODULES_LOADED=$MODULES_LOADED" `echo $file | awk -F/ '{print $NF}'`"
 	done
 
 	[ "$debug" = "Y" ] && echo ""

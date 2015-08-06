@@ -1,4 +1,5 @@
 #!/bin/bash
+git_loc=/nomansland/REPOS/personal_scripts/
 
-. `dirname $0`/core/load_modules.source
+. $git_loc/bash_global/core/load_modules.source
 loadmod core
