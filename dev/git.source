@@ -1,0 +1,11 @@
+#
+#  Git update scripts
+#
+
+# Sets temp varaiables that only exist for the same bash session
+
+alias gpu="git push -u"
+alias gpull="git pull"
+
+alias gcomm="git commit -m"
+alias gpuom="gpu origin master"

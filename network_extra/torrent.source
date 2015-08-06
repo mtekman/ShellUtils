@@ -2,11 +2,11 @@
 hs_addr=tetris@alist.crabdance.com
 hs_port="9922"
 hs_watch=/common_space/download_area/daemons/torrent_watch
-scp="scp -P $hs_port"
-ssh="ssh -p $hs_port"
+n_scp="scp -P $hs_port"
+n_ssh="ssh -p $hs_port"
 
 function torrentStat() {
-	eval $ssh $hs_addr "\"\
+	eval $n_ssh $hs_addr "\"\
 cd /common_space/download_area/daemons/torrent_watch;
 screen -r rtorr -X hardcopy;
 cat hardcopy.0\
@@ -39,7 +39,7 @@ function torrentAdd(){
 Sends a list of .torrent files to the homeserver watch directory to 
 begin downloading " && return
 
-	eval $scp "$*" $hs_addr:$hs_watch/
+	eval $n_scp "$*" $hs_addr:$hs_watch/
 }
 
 complete -f -X '!*.torrent' torrentAdd
@@ -51,7 +51,7 @@ function torrentDel(){
 Prompts .torrent files for deletion on homeserver for all torrents 
 matching any of the names in the name list" && return
 
-	$ssh $hs_addr "cd $hs_watch; for nam in $*; do rm -i \".*$nam.*\"; done"
+	$n_ssh $hs_addr "cd $hs_watch; for nam in $*; do rm -i \".*$nam.*\"; done"
 }
 
 function torrentGrab(){

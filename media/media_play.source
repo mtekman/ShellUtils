@@ -1,5 +1,6 @@
 #!/bin/bash
-ignoredir=/nomansland/REPOS/.ignore/
+ignoredir=~/.ignore/
+mkdir -p $ignoredir
 
 
 youstream(){

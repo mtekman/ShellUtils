@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Needs to be one of the fist scripts loaded for a few of the rest to work
+#
+
+
+# List of mounts across systems -- git_location:starting_dir
+#declare -A loc_array 2> /dev/null
+
+#if [ "$?" = "2" ]; then
+    # DEFAULTS
+#    loc_array="( /nomansland/REPOS/personal_scripts/ $HOME/ $txtred )"
+#else
+
+# Trusted Machine list:
+#   shiroe/N900		 - Phone
+#loc_array[shiroe]="( $HOME/MyDocs/personal_scripts/  $HOME/MyDocs/ $txtcyn )"
+#loc_array[n900]=${loc_array[shiroe]}
+
+#   shinpachi		 - Lappy
+#loc_array[shinpachi]="( $HOME/Documents/REPOS/personal_scripts/  $HOME/Documents/ $bldpur )"
+
+#   gintoki		 - NAS
+#loc_array[gintoki]="( $HOME/REPOS/personal_scripts/  $HOME/ $txtylw )"
+
+#loc_array[Aurora]="( $HOME/personal_scripts/  $HOME/ $txtwht )"
+#loc_array[tetro]=${loc_array[Aurora]}
+
+
+#   coppertop/tower - WorkDesk
+#loc_array[copper]="( /nomansland/REPOS/personal_scripts/  $HOME/Desktop $txtylw )"
+#loc_array[hiroki]=${loc_array[copper]}
+
+# jolla
+#loc_array[Jolla]="( /nomansland/REPOS/personal_scripts/  $HOME/ $txtylw )"
+
+#   pythag/memo-powerdge - Workhorse1
+#   leiniz 		 - Workhorse2
+#loc_array[pythagoras]="( $HOME/Documents/REPOS/personal_scripts/ $HOME/Desktop/Linkage/ $bldred )"
+#loc_array[memo-PowerEdge-R710]=${loc_array[pythagoras]}
+#loc_array[Leibniz]=${loc_array[pythagoras]}
+
+
+#   Ev/jaeger 		 - Bedroom
+#loc_array[Ev]="( $HOME/REPOS/personal_scripts/ $HOME/ $txtylw )"
+#loc_array[jaeger]=${loc_array[Ev]}
+
+#fi
+
+
+#host=$(hostname)
+#valid_machine=( ${loc_array[$host]} )
+
+#if [ "$valid_machine" != "" ]; then
+#	echo "$host = ${valid_machine[1]}, ${valid_machine[2]}"
+#	git_loc="${valid_machine[1]}"
+#	start_dir="${valid_machine[2]}"
+#	hostcolor="${valid_machine[4]}"
+#else
+#	echo "Could not find mount points for hostname:\"$host\""
+#fi
+
+git_loc="/nomansland/REPOS/personal_scripts/"
+start_dir="$HOME"
+hostcolor="$txtylw"
+
+alias personal="cd $git_loc"
+
+#if [ "`pwd`" = "$HOME" ]; then
+#	cd $start_dir
+#fi

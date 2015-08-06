@@ -1,0 +1,19 @@
+
+
+secure_chromium() {
+
+    [ $# != 1 ] && echo "secure_chromium <port>" >&2 && return
+
+    port=$1
+
+    xfce4-terminal -e "ssh -vTND $port $socrates"
+#   spid=$!
+
+    bin=chromium
+    $bin -h >/dev/null 2>&1
+    [ $? = 127 ] && bin=chromium-browser
+    $bin --proxy-server="socks://localhost:$port"
+
+#   kill $spid
+}
+

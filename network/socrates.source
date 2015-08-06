@@ -1,0 +1,38 @@
+#!/bin/bash
+socrates="zcapdd1@socrates.ucl.ac.uk"
+
+socratInit() {
+        [ $# != 1 ] && echo "Initiates a reverse SSH session using socrates.ucl.ac.uk as proxy for the current user and a given port
+
+	usage: socratInit <PORT>
+	" && return
+
+	port=$1
+	while :; do
+		echo "Connected @ `date`" >> /tmp/socrates.log
+
+		# By default the login is set 30 mins
+		$git_loc/bash_global/network/login_socrates_local.expect 30 $port
+
+		echo -en "\rReconnect?[y]"
+		read -n 1 -t 3 answer
+		[ "$answer" = "n" ] && break
+	done
+	echo -en "\rTERMINATED     \n"
+}
+
+
+
+socratConnect() {
+    [ $# -lt 1 ] && echo "Connects to a reverse ssh session previosly initiated by a remote user rfh for a given port.
+
+    usage: socratssh <port> \"[extra commands]\"
+" && return
+
+    port=$1
+    commands=$2
+
+    [ "$commands" = "" ] && commands="screen -r rme;[ \$? = 1 ] && screen -S rme"
+
+    expect -f $git_loc/bash_global/network/login_socrates_remote.expect $port "$commands"
+}
