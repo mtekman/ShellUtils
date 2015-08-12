@@ -1,0 +1,10 @@
+#!/bin/bash
+
+EDITOR=nano
+alias ls="ls --color=auto --group-directories-first"
+
+git_loc="/nomansland/REPOS/personal_scripts/"
+start_dir="$HOME"
+hostcolor="$txtylw"
+
+alias personal="cd $git_loc"
