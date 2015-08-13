@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function remoteCam(){
+
+	[ $# -lt 1 ] && echo "remoteCam <host> [-q -r -h]" && return
+
+	a_qual="-q"; qual=60
+	a_fram="-r"; frame=25
+	a_height="-h"; height=480
+
+	arglist=( "$@" )
+
+	remotehost=$1
+
+	for index in $(seq 1 $#); do
+
+		arg=${arglist[$index]}
+		next=${arglist[$(( $index + 1 ))]}
+
+		if   [ "$arg" = "$a_qual"  ];then qual=$next;
+		elif [ "$arg" = "$a_fram"  ];then frame=$next;
+		elif [ "$arg" = "$a_height" ];then height=$next; fi
+	done
+
+	echo "
+	using:\"remoteCam $remotehost "$a_qual" $qual "$a_fram" $frame "$a_height" $height\"
+	For quality, framerate, and height
+	"
+
+
+	ssh $remotehost "\
+	 gst-launch v4l2src device=/dev/video0 \
+	  ! video/x-raw,height=$height,framerate=$frame/1\
+	  ! videoconvert\
+	  ! jpegenc quality=$qual\
+	  ! filesink location=/dev/stdout"\
+	 | gst-launch filesrc location=/dev/stdin\
+	  ! jpegdec\
+	  ! xvimagesink
+}

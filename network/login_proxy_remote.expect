@@ -1,0 +1,61 @@
+#!/usr/bin/expect
+
+# expect <proxy_host> <proxy_pass> <remote_host> <remote_pass> <port> "[extra commands]"
+
+set proxy_host [lindex $argv 0]
+set proxy_pass [lindex $argv 1]
+set remote_host [lindex $argv 2]
+set remote_pass [lindex $argv 3]
+set port [lindex $argv 4]
+set extra_commands [lindex $argv 5]
+
+#login handles cases:
+#   login with keys (no user/pass)
+#   user/pass
+#   login with keys (first time verification)
+
+proc prompters { proxy_pass remote_pass extra_commands } {
+	
+	expect {
+		"> " { }
+		"$ " { }
+		"assword: " { 
+			send "$proxy_pass\n"
+			expect {
+				"% " { }
+				"$ " { }
+				"assword: " {
+					send "$remote_pass\n"
+					if { $extra_commands != "" } {
+						expect {
+							"$ " { send "$extra_commands\n" }
+						}
+					}
+					interact
+				}
+				"(yes/no)? " {
+					send "yes\n"
+					#recurse here 1
+					prompters $proxy_pass $remote_pass $extra_commands
+				}
+			}
+		}
+		"(yes/no)? " {
+			send "yes\n"
+			
+			#recurse here 2
+			prompters $proxy_pass $remote_pass $extra_commands
+		}
+	}
+	send_user "Login failed\n"
+	exit
+}
+
+proc login_remote { proxy_host proxy_pass remote_host remote_pass port extra_commands } {
+	uplevel #0 spawn ssh -A -t $proxy_host -X ssh -A -t $remote_host -p $port -X
+	
+	prompters $proxy_pass $remote_pass $extra_commands	
+}
+
+login_remote $proxy_host $proxy_pass $remote_host $remote_pass $port $extra_commands;
+

@@ -1,15 +1,16 @@
 #!/usr/bin/expect -f
 
-set password1 "Sh0rt*s;"
-set password2 "r0y4lfr33rul35"
+# login_socrates_remote.expect <proxy_host> <proxy_pass> <remote_host> <remote_pass> <port> "[extra commands]"
 
-# On a given port
-set portarg [lindex $argv 0]
-set comms [lindex $argv 1]
-if { $portarg == "" } { set portarg 9999}
+set proxy_host [lindex $argv 0]
+set proxy_pass [lindex $argv 1]
+set remote_host [lindex $argv 2]
+set remote_pass [lindex $argv 3]
+set port [lindex $argv 4]
+set extra_commands [lindex $argv 5]
 
-spawn ssh -A -t zcapdd1@socrates.ucl.ac.uk -X \
-ssh -A -t "rfh@localhost" -p $portarg -X;
+spawn ssh -A -t $proxy_host -X \
+ssh -A -t $remote_host -p $port -X;
 
 #login handles cases:
 #   login with keys (no user/pass)
@@ -19,13 +20,13 @@ expect {
   "> " { }
   "$ " { }
   "assword: " { 
-        send "$password1\n"
+        send "$proxy_pass\n"
         expect {
           "% " { }
           "$ " { }
 	  "assword: " {
-		send "$password2\n"
-		if { $comms != "" } {
+		send "$remote_pass\n"
+		if { $extra_commands != "" } {
 			expect {
 			 "$ " { send "$comms\n" }
 			}
@@ -40,11 +41,11 @@ expect {
 	  "> " { }
 	  "$ " { }
 	  "assword: " { 
-	        send "$password1\n"
+	        send "$proxy_pass\n"
 	        expect {
 	          "% " { }
 	          "$ " { }
-		  "assword: " { send "$password2\n" }
+		  "assword: " { send "$remote_pass\n" }
 	        }
   	   }
 	}

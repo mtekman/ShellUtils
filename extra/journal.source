@@ -1,3 +1,4 @@
+#!/bin/bash
 
 journal_dir=$git_loc/notes/life/journal
 journal_last=$journal_dir/.last
