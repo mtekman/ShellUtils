@@ -1,4 +1,4 @@
-## FFMPEG ##################################################
+#!/bin/bash
 
 ffbin=ffmpeg
 pybin=python2

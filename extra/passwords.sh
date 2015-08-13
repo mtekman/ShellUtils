@@ -2,10 +2,11 @@
 
 action=$1
 host=$2
-pass=$3
+salt=$3
+pass=$4
 
 passwd_dir="$HOME/.password_hashes"
-pass_opts=-aes-256-cbc\ -nosalt\ -pass\ pass:nanikore
+pass_opts=-aes-256-cbc\ -nosalt\ -pass\ pass:$salt
 
 generatePass(){
 	[ $# != 2 ] && echo "generatePass \"<hostname>\" \"<password>\"" && return
@@ -31,13 +32,13 @@ retrievePass(){
 
 if [ "$action" = "generate" ]; then
 
-	[ "$pass" = "" ] && echo "please give hostname AND password" && exit -1
+	[ "$pass" = "" ] && echo "please give hostname, salt, AND password" && exit -1
 	generatePass $host $pass
 	
 elif [ "$action" = "retrieve" ]; then
-	[ "$host" = "" ] && echo "please provide a hostname" && exit -1
+	[ "$host" = "" ] && echo "please provide a hostname and salt" && exit -1
 
 	retrievePass $host;
 else
-	echo "`basename $0` (generate|retrieve) <hostname> [<pass>]" && exit -1
+	echo "`basename $0` (generate|retrieve) <hostname> <salt> [<pass>]" && exit -1
 fi

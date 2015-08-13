@@ -15,6 +15,7 @@ getProxies() {
 # | egrep "no:(no|yes)"
 }
 
+
 testProxSpeed() {
 	prox=$1
 	url=$(echo $prox | awk -F":" '{print $1}')
@@ -23,6 +24,7 @@ testProxSpeed() {
 	#time
 	echo $(nmap -p $port $url | grep "scanned" | egrep -o "[0-9]+\.[0-9]+")
 }
+
 
 chooseProxy() {
 	proxies="$(getProxies)"
@@ -54,7 +56,3 @@ chooseProxy() {
 	http_proxy=$choice
 	echo -e "\rProxy set to: $http_proxy" >&2
 }
-
-export -f getProxies
-export -f testProxSpeed
-export -f chooseProxy

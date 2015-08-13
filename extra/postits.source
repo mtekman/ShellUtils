@@ -1,9 +1,0 @@
-
-
-breakloop(){
-	$EDITOR $git_loc/exoz/habits_break/loops.txt;
-}
-
-reminder(){ 
-	$EDITOR $git_loc/notes/life/reminder_s;
-}
