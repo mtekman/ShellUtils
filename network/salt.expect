@@ -1,0 +1,23 @@
+#!/usr/bin/expect -f 
+
+proc getsalt pwprompt {
+
+	set oldmode [stty -echo -raw]
+	send_user "\n$pwprompt"
+	set timeout -1
+	expect_user -re "(.*)\n"
+	send_user "\n"
+	eval stty $oldmode
+	return $expect_out(1,string)
+
+}
+
+proc getpass { proxy_host salt } {
+	set error_code [catch {exec ./passwords.sh retrieve $proxy_host $salt} proxy_pass]
+
+	if { $error_code != "0" } {
+		send_user "bad salt.\n"
+		exit
+	}
+	return $proxy_pass
+}
