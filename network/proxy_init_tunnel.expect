@@ -15,7 +15,8 @@ set count_loop 0
 
 proc init_connect { loop_number } {
 
-	uplevel #0 spawn ssh -R $::portarg:localhost:22 $::proxy_host
+	global pid
+	set pid [uplevel #0 spawn ssh -R $::portarg:localhost:22 $::proxy_host]
 	set message "You are now logged in for $::timearg mins on port $::portarg \[$loop_number\]"
 	
 	send_user "connecting...\n"
@@ -25,43 +26,46 @@ proc init_connect { loop_number } {
 	#   user/pass
 	#   login with keys (first time verification)
 	expect {
-		"> " { }
-		"$ " { }
+		"% " { send "$message"}
 		"assword: " { 
 			send "$::proxy_pass\n" 
 			expect {
-				"% " { send "$message"}
-				"$ " { send "$message"}
+				"% " { 
+					send_user "$message"
+					expect {
+						timeout {ontimeout " -> catch"}
+					}
+				}
 			}
 		}
 		"(yes/no)? " { 
 			send "yes\n"
 			expect {
-			  "% " { send "$message"}
-			  "$ " { send "$message"}
-			  "assword: " { 
+				"assword: " { 
 					send "$::proxy_pass\n" 
 					expect {
-						"% " { send "$message"}
-						"$ " { send "$message"}
+						"% " { 
+							send_user "$message"
+							expect {
+								timeout {ontimeout "catch"}
+							}
+						}
 					}
 				}
 			}
 		}
 		send_user "Login failed\n"
-		exit
 	}
+}
+
+proc ontimeout { messages } {
+	global count_loop
+	
+	exec kill -9 $::pid
+	sleep 2;
+	send_user "$messages\n"
+	set count_loop [expr {$::count_loop + 1}]
+	init_connect $count_loop
 }
 
 init_connect $count_loop
-
-expect {
-	"%" {}
-	timeout {
-		set count_loop [expr {$count_loop + 1}]
-		init_connect $count_loop
-	}
-	eof {}
-}
-
-

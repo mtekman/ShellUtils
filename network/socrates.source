@@ -12,19 +12,10 @@ socratInit() {
 	timeout=$2
 	[ "$timeout" = "" ] && timeout=30
 	
-	while :; do
-		echo "Connected @ `date`" >> /tmp/socrates.log
-
-		# By default the login is set 30 mins
-		$git_loc/bash_global/network/proxy_init_tunnel.expect $socrates $timeout $port
-		
-		[ $? = 255 ] && return
-
-		echo -en "\rReconnect?[y]"
-		read -n 1 -t 3 answer
-		[ "$answer" = "n" ] && break
-	done
-	echo -en "\rTERMINATED     \n"
+	# By default the login is set 30 mins
+	$git_loc/bash_global/network/proxy_init_tunnel.expect $socrates $timeout $port
+	
+	echo -en "\rTERMINATED <-------- \n"
 }
 
 
