@@ -1,13 +1,15 @@
 #!/usr/bin/expect -f
 
-source salt.expect
+set working_dir [lindex $argv 0]
 
-set proxy_host [lindex $argv 0]
-set timearg [lindex $argv 1]
-set portarg [lindex $argv 2]
+source $working_dir/salt.expect
+
+set proxy_host [lindex $argv 1]
+set timearg [lindex $argv 2]
+set portarg [lindex $argv 3]
 
 set salt [getsalt "salt: "]
-set proxy_pass [getpass $proxy_host $salt]
+set proxy_pass [getpass $working_dir $proxy_host $salt]
 
 set timeout [expr $timearg*60]
 

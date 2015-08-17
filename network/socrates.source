@@ -13,7 +13,7 @@ socratInit() {
 	[ "$timeout" = "" ] && timeout=30
 	
 	# By default the login is set 30 mins
-	$git_loc/bash_global/network/proxy_init_tunnel.expect $socrates $timeout $port
+	$git_loc/bash_global/network/proxy_init_tunnel.expect $git_loc/bash_global/network $socrates $timeout $port
 	
 	echo -en "\rTERMINATED <-------- \n"
 }
@@ -21,16 +21,15 @@ socratInit() {
 
 
 socratConnect() {
-	[ $# -lt 2 ] && echo "Connects to a reverse ssh session previosly initiated by a remote user rfh for a given port.
-	usage: socratssh <port> <saltword> \"[extra commands]\"
+	[ $# -lt 1 ] && echo "Connects to a reverse ssh session previosly initiated by a remote user rfh for a given port.
+	usage: socratConnect <port> \"[extra commands]\"
 " && return
 
 	port=$1
-	salt=$2
-	commands=$3
+	commands=$2
 	
 	[ "$commands" = "" ] && commands="screen -r rme;[ \$? = 1 ] && screen -S rme"
 	
 	# All passwords are retrieved via expect to ensure security from `ps`
-	$git_loc/bash_global/network/proxy_login_tunnel.expect $socrates $pythagoras $port "$commands"
+	$git_loc/bash_global/network/proxy_login_tunnel.expect $git_loc/bash_global/network $socrates $pythagoras $port "$commands"
 }

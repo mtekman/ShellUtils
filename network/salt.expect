@@ -12,8 +12,8 @@ proc getsalt pwprompt {
 
 }
 
-proc getpass { proxy_host salt } {
-	set error_code [catch {exec ./passwords.sh retrieve $proxy_host $salt} proxy_pass]
+proc getpass { working_dir proxy_host salt } {
+	set error_code [catch {exec $working_dir/passwords.sh retrieve $proxy_host $salt} proxy_pass]
 
 	if { $error_code != "0" } {
 		send_user "bad salt.\n"
