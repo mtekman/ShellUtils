@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Script to set proxy for http and wget
 
 export http_proxy=""

@@ -5,3 +5,4 @@ git_loc=/nomansland/REPOS/personal_scripts/
 loadmod core
 loadmod dev
 loadmod network
+loadmod personal_bash
