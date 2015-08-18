@@ -1,3 +1,4 @@
 [submodule "personal_bash"]
 	path = personal_bash
 	url = https://tetris11@bitbucket.org/tetris11/personal_bash.git
+	ignore = all
