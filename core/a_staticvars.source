@@ -3,7 +3,7 @@
 EDITOR=nano
 alias ls="ls --color=auto --group-directories-first"
 
-git_loc="/nomansland/REPOS/personal_scripts/"
+git_loc="/nomansland/personal_scripts/"
 start_dir="$HOME"
 hostcolor="$txtylw"
 
