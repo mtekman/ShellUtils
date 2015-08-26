@@ -28,3 +28,12 @@ function gstat {
 		cd $base;
 	done
 }
+
+
+function git-author {
+	[ $# != 1 ] && echo -e "\n\tgit-author <author>\n\n changes the author of previous commits to a new one" && return
+
+	git filter-branch -f --env-filter 'export GIT_COMMITTER_NAME=junta12; export GIT_COMMITTER_EMAIL="junta12"; export GIT_AUTHOR_NAME=junta12; export GIT_AUTHOR_EMAIL=junta12' --tag-name-filter cat -- --branches --tags
+
+	echo "verify local changes, and then update remote via: git push --force --tags origin 'refs/heads/*'"
+}
