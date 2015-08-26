@@ -20,7 +20,7 @@ function gstat {
 	for f in `find -L ./ -name ".git"`;do 
 		cd $f/..;
 
-		stat=`echo $(git status) | grep -v nothing`;
+		stat=`echo $(git status) | grep -v clean`;
 		[ "$stat" != "" ]\
 		&& echo -e "\n--> `dirname $f`:\n" \
 		&& git status;
