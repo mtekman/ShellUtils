@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #  Git update scripts
 #
@@ -10,3 +11,20 @@ alias gpull="git pull"
 
 alias gcomm="git commit -m"
 alias gpuom="gpu origin master"
+
+function gstat {
+
+	cd $git_loc
+
+	base=`pwd`;
+	for f in `find -L ./ -name ".git"`;do 
+		cd $f/..;
+
+		stat=`echo $(git status) | grep -v nothing`;
+		[ "$stat" != "" ]\
+		&& echo -e "\n--> `dirname $f`:\n" \
+		&& git status;
+
+		cd $base;
+	done
+}
