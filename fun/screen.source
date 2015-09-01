@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function busyStart {
+	/nomansland/personal_scripts/bash_global/fun/xdo_screen_setup.sh
+}
+
+function busyKill {
+	# Kill tree
+	kill `pstree -p -a -l $(ps aux | egrep " screen -S" | head -1 | awk '{print $2}') | cut -d, -f2 | cut -d' ' -f1`
+}
