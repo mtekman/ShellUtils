@@ -75,7 +75,7 @@ function progressdots(){
 
 	while [ $interval -gt 0 ]; do
 		echo -en "\r$tabs""${progress[$interval%$prog_len]} \r";
-		sleep 0.15;
+		sleep 0.4;
 		interval=$(( $interval - 1 ));
 	done
 }
