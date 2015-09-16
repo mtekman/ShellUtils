@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function media_finder(){
+	[ $# != 2 ] && echo "media_finder <media> <ext[|ext2|ext3]> " && return
+
+	media="$1"
+	exts="$2"
+
+	firefox "https://www.google.co.uk/?gfe_rd=cr&ei=GNn2VeHVOYKf-wb657KYAQ#safe=off&q=\
+$media -inurl:(htm|html|php|pls|txt) intitle:index.of\
+ \“last modified\” ($exts)"
+}
+
+function movie_finder(){
+	[ $# != 1 ] && echo "movie_finder <movie>" && return
+
+	media_finder "$*" "(mkv|mp4|avi|wmv|mpg)"
+}
+
+
+function song_finder(){
+	[ $# != 1 ] && echo "song_finder <song>" && return
+
+	media_finder "$*" "(mp3|wma|wav|aac|m4a|flac|ogg)"
+}
