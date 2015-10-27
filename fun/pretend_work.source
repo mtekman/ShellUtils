@@ -5,8 +5,28 @@ function randomwait(){
 #	sleep 0.1
 }
 
+function preamble(){
+	# Never used awk: progress
+	bins=( hexdump fortune egrep bc sed )
+	il=""	# install_list
+	
+	# Test each
+	for b in ${bins[@]}; do
+		$b -h >/dev/null 2>&1
+		# EX error code
+		[ $? = 127 ] && il="$b $il"
+	done
+	
+	# Pure kludge
+	[ "$il" != "" ] && echo "Install `echo $(sed 's/ /, /g' <<< $il) | rev | sed 's/,/dna ,/' | rev` first!" >&2 && return -1
+	return 0
+}
+
+
 function findrin()
 {
+	preamble || return -1
+
 	declare -a progress;
 	progress=( 
 " ----->"
@@ -23,20 +43,20 @@ function findrin()
 	)
 
 	prog_len=${#progress[@]}
-	
-#	tput civis
 
-	scan_wait_lower=$1
-	scan_wait_upper=$2
+	# Defaults
+	scan_wait_lower=${1:-0}
+	scan_wait_upper=${2:-50}
 
-	[ "$scan_wait_lower" = "" ] && scan_wait_lower=0
-	[ "$scan_wait_upper" = "" ] && scan_wait_upper=50
+#	echo "$scan_wait_lower $scan_wait_upper"
 
+	# Reticulating Splines.... hmmm
 	echo -en "Initialising:\n  *\tconnecting to news feeds..." && randomwait
 	echo -en "\t[x]\n  *\tstarting crawler..." && randomwait
 	echo -en "\t\t[x]\n  *\tparsing links..." && randomwait
 	echo -en "\t\t[x]\n  *\tstream quality..." && randomwait
 
+	# Quality
 	fract="$RANDOM/$RANDOM"
 	actual_fract=$(echo "scale=2; if ( $fract > 1 ) print \"high\" else print \"low\"" | bc)
 	echo -en "($fract)\t[$actual_fract]\n"
@@ -45,6 +65,7 @@ function findrin()
 
 	while :; do
 
+		# Initial pause
 		max_loops=$(( 5 + ($RANDOM % 5) ))
 
 		while [ $max_loops -gt 0 ]; do
@@ -56,19 +77,17 @@ function findrin()
 
 		progressdots `echo "20 + ($RANDOM % 20)" | bc` "$bldred[ connection dropped ] - reconnecting$txtrst""---" 5
 		echo -e "\t\t\t\t\t[x]      "
-
-
 	done
 }
 
-
+# Ah Bash, ye mess.
 function progressdots(){
 	interval=$1
 	pre_message="$2"
 
-	tbs=$3
+	# Spacing defaults
+	tbs=${3:-2}
 	tabs=""
-	[ "$tbs" = "" ] && tbs=2
 	while [ $tbs -gt 0 ];do tabs=$tabs"\t"; tbs=$(( $tbs - 1 )); done
 
 	echo -en "$pre_message"
@@ -84,6 +103,7 @@ function progressdots(){
 function scanning(){
 	interval=$1
 
+	# Match only whole blocks, or pairs across blocks
 	matcher="(2[1-9a-f])|([3-6][0-9a-f])|(7[0-9a-c])"
 	regex="\
 (\
