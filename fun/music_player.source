@@ -1,0 +1,15 @@
+#!/bin/bash
+
+playRandom(){
+	IFS='
+'
+	files=`find ./ -type f\
+ -name "*.mp3" -o\
+ -name "*.flac" -o\
+ -name "*.aac" -o\
+ -name "*.wma"`
+
+	for f in `echo "$files" | shuf`; do
+		mplayer $f;
+	done
+}
