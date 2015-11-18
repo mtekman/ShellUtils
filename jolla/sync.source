@@ -1,0 +1,34 @@
+#!/bin/bash
+
+function __update() {
+	rsync -avP "$localdir" "$jolladir"
+	echo "============================"
+	echo ""
+}
+
+
+function __syncNotes() {
+	
+	echo "===========NOTES============"
+	localdir=$jolla_sqdb
+	jolladir=$jolla_usb:$localdir  # same place in git
+
+	__update
+}
+
+function __syncMusic() {
+
+	echo "==========MUSIC============="
+	localdir=~/Media/Audio/
+	jolladir=$jolla_usb:"~/Music/"
+
+	__update
+}
+
+
+function jollaSync() {
+
+	__syncMusic
+	__syncNotes
+
+}

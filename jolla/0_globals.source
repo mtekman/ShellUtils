@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Notes location
+jolla_sqdb=/nomansland/personal_scripts/notes/jolla-notes/QML/OfflineStorage/Databases/8b63c31a7656301b3f7bcbbfef8a2b6f.sqlite
+jolla_usb=nemo@192.168.2.15
