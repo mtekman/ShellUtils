@@ -1,0 +1,80 @@
+#!/bin/bash
+
+EDITOR=nano
+
+#function __jollaDeleteNotePrompt(){
+#	ans="$1"
+#
+#        echo -en "[INFO] Empty body, delete note [n]?  "
+#       read res;
+#
+ #       if [ "$res" = "y" ]; then
+  #          sqlite3 $jolla_sqdb -bail -cmd "delete from notes where pagenr=$ans; quit;" 2>/dev/null
+   #         echo "Deleted Note $ans"
+    #    fi
+#}
+
+
+function jollaNotes() {
+
+	# -bail flag needed because I don't know how to run a simple sqlite query
+	# and then exit. So I call an invalid 'quit' function that bails on error
+
+	notes=$( sqlite3 $jolla_sqdb -bail -cmd "select pagenr,body from notes;quit;" 2>/dev/null )
+	notes=$( echo "$notes" | grep -P "^\d+\|" | sort -n )
+	notes_formatted=$( echo "$notes" | sed 's/|/\t/g'  | sed 's/^/- /g' )
+
+	max=$(echo "$notes" | grep -oP "^[0-9]+" | sort -nr | head -1 )
+	echo $max
+
+	echo -e "\n\n$notes_formatted"
+
+	echo -en "\nPlease choose Note to edit (or hit enter for new): "
+	read ans;
+
+	[ "$ans" = "" ] && ans=$(( $max + 1 ))  	# New Note, make ans > current
+
+	[ "`echo $ans | grep -oP '[0-9]+'`" = "" ] && echo "[INFO] No selection" && return
+	
+	tmp_note=/var/tmp/edit_note
+
+	if [ $ans -le $max ]; then					# Update Note
+		ans=$( echo "$ans" | grep -oP "[0-9]+" )
+		body=$(sqlite3 $jolla_sqdb -bail -cmd "select body from notes where pagenr=$ans; quit;" 2>/dev/null )
+
+		echo "$body" > $tmp_note
+
+		$EDITOR $tmp_note
+		body=$(cat $tmp_note) # new body
+
+		if [ `wc -w < $tmp_note` -gt 0 ]; then
+			sqlite3 $jolla_sqdb -bail -cmd "update notes set body=\"$body\" where pagenr=$ans; quit;" 2>/dev/null
+			echo "Updated."
+		else
+#			__jollaDeleteNotePrompt
+		        echo -en "Body is empty, delete note [n]?  "
+		        read res;
+
+		        if [ "$res" = "y" ]; then
+		            sqlite3 $jolla_sqdb -bail -cmd "delete from notes where pagenr=$ans; quit;" 2>/dev/null
+		            echo "Deleted Note $ans."
+		        fi
+		fi
+	else								# New note
+		echo "[INFO] New Note"
+		sleep 0.5
+
+		rm $tmp_note
+		$EDITOR $tmp_note
+
+		body=$(cat $tmp_note) 					# new body
+		entry=$(( $max + 1 ))
+
+                if [ `wc -w < $tmp_note` -gt 0 ]; then
+                        sqlite3 $jolla_sqdb -bail -cmd "insert into notes values($entry, '#ff0000', \"$body\"); quit;" 2>/dev/null
+			echo "Inserted."
+                else
+			echo "Body is empty, nothing inserted."
+                fi
+	fi
+}

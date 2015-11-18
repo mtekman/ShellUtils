@@ -24,9 +24,11 @@ Loads .source modules from the bash_global folder" && return
 	dir="$git_loc/bash_global/$mod/"
 
 	for file in $dir/*.source; do
-		[ "$debug" = "Y" ] && echo -e "\t`echo $file | awk -F/ '{print $NF}'`"
+		mmmo=`echo $file | awk -F/ '{print $NF}'`}
+
+		[ "$debug" = "Y" ] && echo -e "\t$mmmo"
 		. $file
-		MODULES_LOADED=$MODULES_LOADED" `echo $file | awk -F/ '{print $NF}'`"
+		MODULES_LOADED=$MODULES_LOADED" $mmmo"
 	done
 
 	[ "$debug" = "Y" ] && echo ""
@@ -42,18 +44,18 @@ module_completion()
 	local cur argg arggtest dirr
 
 	COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
+	cur=${COMP_WORDS[COMP_CWORD]}
 
-    arggtest="${@: -1}"
-    [ "$arggtest" != "" ] && argg=$arggtest
+	arggtest="${@: -1}"
+	[ "$arggtest" != "" ] && argg=$arggtest
 
 #    if [ "$argg" = "/" ]; then
 #        COMPREPLY=( $(compgen -W "$(ls -d $mod_dir/*/ | awk -F'/' '{print $NF}' )" -- $cur ) )
 #    else
-        dirr=$mod_dir/$argg/
-        ! [ -d $dirr ] && dirr=$mod_dir   # reset for false folder
-    
-		COMPREPLY=( $(compgen -W "$(find $dirr -type d | awk -F$dirr '{print $NF}')" -- $cur ) )
+	dirr=$mod_dir/$argg/
+	! [ -d $dirr ] && dirr=$mod_dir   # reset for false folder
+
+	COMPREPLY=( $(compgen -W "$(find $dirr -type d | awk -F$dirr '{print $NF}' | grep -v ".git" )" -- $cur ) )
 #    fi
 
     return 0

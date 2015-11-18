@@ -1,0 +1,6 @@
+#!/bin/bash
+
+function usbNetworking {
+	down_devices=`ip a | grep DOWN | grep -oP "enp.*(?=:)"`
+	sudo dhcpcd $down_devices
+}
