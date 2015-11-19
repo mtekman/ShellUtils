@@ -1,15 +1,38 @@
 #!/bin/bash
 
-function __update() {
-	rsync -avP "$localdir" "$jolladir"
-	echo "============================"
+function __transfer() {
+	to="$1"
+	from="$2"
+	art="$3"
+
+	syncer="rsync -u -avP"
+
+	dry=$( $syncer -n "$localdir" "$jolladir" 2>&1 | wc -l )
+#	echo $dry
+	
+	if [ $dry -lt 5 ];then			# Nothing to transfer, hide needless output
+		$syncer -q "$to" "$from"
+		echo -en "\r$art"
+	else					# Stuff transferred, show what
+		$syncer "$to" "$from"
+		echo -e "$art"
+	fi
+}
+
+
+
+function __update()
+{
+	__transfer "$localdir" "$jolladir" "---:------------------------>>"
+	__transfer "$jolladir" "$localdir" "<<-:----------------------:->>"
+	echo ""
 	echo ""
 }
 
 
 function __syncNotes() {
 	
-	echo "===========NOTES============"
+	echo "____________NOTES____________"
 	localdir=$jolla_sqdb
 	jolladir=$jolla_usb:$localdir  # same place in git
 
@@ -18,7 +41,7 @@ function __syncNotes() {
 
 function __syncMusic() {
 
-	echo "==========MUSIC============="
+	echo "____________MUSIC____________"
 	localdir=~/Media/Audio/
 	jolladir=$jolla_usb:"~/Music/"
 
@@ -27,8 +50,8 @@ function __syncMusic() {
 
 
 function jollaSync() {
+	[ "$1" != "" ] && jolla_usb=$1
 
-	__syncMusic
 	__syncNotes
-
+	__syncMusic
 }
