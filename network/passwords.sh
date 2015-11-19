@@ -3,15 +3,16 @@
 action=$1
 host=$2
 salt=$3
-pass=$4
 
 passwd_dir="$HOME/.password_hashes"
 pass_opts=-aes-256-cbc\ -nosalt\ -pass\ pass:$salt
 
 generatePass(){
-	[ $# != 2 ] && echo "generatePass \"<hostname>\" \"<password>\"" && return
+	[ $# != 1 ] && echo "generatePass \"<hostname>\" " && return
 
-	pass=$(echo $2 | openssl enc -base64 -e $pass_opts)
+	read -s -p "pass: " pass
+	echo ""
+	pass=$(echo $pass | openssl enc -base64 -e $pass_opts)
 	host=$1
 	
 	[ -e $passwd_dir ] && off=`grep -n $host $passwd_dir` && [ "$off" != "" ] && echo -e "\"$host\" already found in $passwd_dir.\nPlease remove line `echo $off | awk -F':' '{print $1}'` and try again." >&2 && return
@@ -30,15 +31,15 @@ retrievePass(){
 	echo "$pass_hash" | openssl enc -base64 -d $pass_opts
 }
 
-if [ "$action" = "generate" ]; then
+[ "$action" = "" ] || [ "$host" = "" ] && echo "`basename $0` ( generate | retrieve ) <hostname> [salt]" && exit -1
+#[ "$host" = "" ] && echo "please give hostname" && exit -1
+[ "$salt" = "" ] && read -s -p "salt: " salt && echo ""
 
-	[ "$pass" = "" ] && echo "please give hostname, salt, AND password" && exit -1
-	generatePass $host $pass
+if [ "$action" = "generate" ]; then
+	generatePass $host
 	
 elif [ "$action" = "retrieve" ]; then
-	[ "$host" = "" ] && echo "please provide a hostname and salt" && exit -1
-
 	retrievePass $host;
 else
-	echo "`basename $0` (generate|retrieve) <hostname> <salt> [<pass>]" && exit -1
+	echo "`basename $0` ( generate | retrieve ) <hostname> [salt]" && exit -1
 fi
