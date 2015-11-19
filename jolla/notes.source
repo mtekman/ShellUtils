@@ -2,19 +2,6 @@
 
 EDITOR=nano
 
-#function __jollaDeleteNotePrompt(){
-#	ans="$1"
-#
-#        echo -en "[INFO] Empty body, delete note [n]?  "
-#       read res;
-#
- #       if [ "$res" = "y" ]; then
-  #          sqlite3 $jolla_sqdb -bail -cmd "delete from notes where pagenr=$ans; quit;" 2>/dev/null
-   #         echo "Deleted Note $ans"
-    #    fi
-#}
-
-
 function jollaNotes() {
 
 	# -bail flag needed because I don't know how to run a simple sqlite query
