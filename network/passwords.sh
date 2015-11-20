@@ -4,7 +4,10 @@ action=$1
 host=$2
 salt=$3
 
-passwd_dir="$HOME/.password_hashes"
+[ "$action" = "" ] || [ "$host" = "" ] && echo "`basename $0` ( generate | retrieve ) <hostname> [salt]" && exit -1
+[ "$salt" = "" ] && read -s -p "salt: " salt && echo ""
+
+passwd_dir=$HOME/.password_hashes
 pass_opts=-aes-256-cbc\ -nosalt\ -pass\ pass:$salt
 
 generatePass(){
@@ -14,10 +17,35 @@ generatePass(){
 	echo ""
 	pass=$(echo $pass | openssl enc -base64 -e $pass_opts)
 	host=$1
-	
-	[ -e $passwd_dir ] && off=`grep -n $host $passwd_dir` && [ "$off" != "" ] && echo -e "\"$host\" already found in $passwd_dir.\nPlease remove line `echo $off | awk -F':' '{print $1}'` and try again." >&2 && return
-	
-	echo -e "$1\t$pass" >> $passwd_dir
+
+	if [ -e $passwd_dir ]; then
+
+		# Check for host
+		off=`grep -n $host $passwd_dir`
+		if [ "$off" != "" ]; then
+
+			# and pass
+			old_pass=`grep $host $passwd_dir | awk '{print $2}'`
+			[ "$pass" = "$old_pass" ] && echo "[Aborted] $host already exists for that password." && return
+
+			echo -e "\"$host\" already found in $passwd_dir at line `echo $off | awk -F':' '{print $1}'`, but a different password"
+
+			# Replace prompt
+			read -p "Replace? [n] " ans
+			echo ""
+			if [ "$ans" = "y" ]; then
+				sed -i "s/$host.*/$host\t$pass/" $passwd_dir	#replace
+				echo "[Updated] Hash for \"$host\" saved  to $passwd_dir" >&2
+				return
+			fi
+
+			echo "[Aborted]"
+			return
+		fi
+	fi
+
+	echo -e "$host\t$pass" >> $passwd_dir
+	echo ""
 	echo "[Done] Hash for \"$host\" saved to $passwd_dir"
 }
 
@@ -31,9 +59,6 @@ retrievePass(){
 	echo "$pass_hash" | openssl enc -base64 -d $pass_opts
 }
 
-[ "$action" = "" ] || [ "$host" = "" ] && echo "`basename $0` ( generate | retrieve ) <hostname> [salt]" && exit -1
-#[ "$host" = "" ] && echo "please give hostname" && exit -1
-[ "$salt" = "" ] && read -s -p "salt: " salt && echo ""
 
 if [ "$action" = "generate" ]; then
 	generatePass $host
@@ -41,5 +66,5 @@ if [ "$action" = "generate" ]; then
 elif [ "$action" = "retrieve" ]; then
 	retrievePass $host;
 else
-	echo "`basename $0` ( generate | retrieve ) <hostname> [salt]" && exit -1
+	echo "Invalid option" && exit -1
 fi
