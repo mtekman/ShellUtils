@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Callers for the expect scripts
+#
+#
+
+revsshInit() {
+        [ $# -lt 2 ] && echo "Initiates a reverse SSH session using a proxy for the current user and a given port
+
+	usage: revsshInit <proxy> <PORT> [timeout]
+	" && return
+
+	proxy=$1
+	port=$2
+	timeout=${3-30}		# By default the login is set to 30 mins
+
+	$git_loc/bash_global/network/proxy_init_tunnel.expect $git_loc/bash_global/network $proxy $timeout $port
+
+	echo -en "\rTERMINATED <-------- \n"
+}
+
+revsshConnect() {
+	[ $# -lt 3 ] && echo "Connects to a reverse ssh session previosly initiated by a given user for a given port through a proxy.
+	usage: revsshConnect <proxy> <user> <port> \"[extra commands]\"
+" && return
+
+	proxy=$1
+	user=$2
+	port=$3
+	commands="$4"
+
+	# Persist sessions over timeout disconnects
+	[ "$commands" = "" ] && commands="screen -r rme;[ \$? = 1 ] && screen -S rme"
+
+	# All passwords are retrieved via expect to ensure security from `ps`
+	$git_loc/bash_global/network/proxy_login_tunnel.expect $git_loc/bash_global/network $proxy $user $port "$commands"
+}
