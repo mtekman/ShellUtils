@@ -9,14 +9,16 @@ proc getsalt pwprompt {
 	send_user "\n"
 	eval stty $oldmode
 	return $expect_out(1,string)
-
 }
 
+
 proc getpass { working_dir proxy_host salt } {
-	set error_code [catch {exec $working_dir/passwords.sh retrieve $proxy_host $salt} proxy_pass]
+	set error_code [catch {exec $working_dir/passwords.sh retrieve $proxy_host $salt } proxy_pass]
 
 	if { $error_code != "0" } {
-		send_user "bad salt.\n"
+		send_user "\n\[Error\]\n $proxy_pass\n"
+		send_user "\n\[Info: $proxy_host\]\n Either:\n - Bad salt\n - Password needs updating via:\n"
+		send_user "\tpasswords generate $proxy_host\n\n"
 		exit
 	}
 	return $proxy_pass
