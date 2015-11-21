@@ -9,6 +9,9 @@ set remote_host [lindex $argv 2]
 set port [lindex $argv 3]
 set extra_commands [lindex $argv 4]
 
+# Try to connect for 40 seconds, then  if none
+set timeout 40
+
 #login handles cases:
 #   login with keys (no user/pass)
 #   user/pass
