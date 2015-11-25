@@ -1,6 +1,16 @@
 #!/bin/bash
 
 playRandom(){
+
+	pwd=$(basename `pwd`)
+
+	enable_rating=$1
+	rating_dir=~/music_ratings/
+
+	if [ "$pwd" != "Music" ] || [ "$pwd" != "Audio" ] || ["$pwd" != "Songs" ]; then
+		cd `find ~/ -type d -name "*usic" -o -name "*udio" -o -name "*ongs"  2>/dev/null | grep -v "Trash" | head -1`
+	fi
+
 	IFS='
 '
 	files=`find ./ -type f\
@@ -11,5 +21,31 @@ playRandom(){
 
 	for f in `echo "$files" | shuf`; do
 		mplayer $f;
+
+
+		while :; do
+			if [ "$enable_rating" != "" ]; then
+				read -p "rating [0-5]? (skip with enter)" ans;
+			
+				if [ "$ans" = "" ]; then
+					echo "no rating"; 
+					sleep 1;
+					break;
+
+				elif [ "`echo $ans | egrep -o '\b[0-9]+\b'`" != "" ]; then
+
+					if [ $ans -ge 0 ] || [ $ans -lt 6 ]; then
+						fold=$rating_dir/$ans;
+						mkdir -p $fold;
+						ln -s $f $fold;
+						echo "symlinked $f -> $fold"
+						break
+					fi
+
+					echo "Invalid range, try again."
+#					continue
+				fi
+			fi
+		done
 	done
 }
