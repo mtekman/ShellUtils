@@ -5,23 +5,27 @@
 #
 
 revsshInit() {
-        [ $# -lt 2 ] && echo "Initiates a reverse SSH session using a proxy for the current user and a given port
+        [ $# -lt 3 ] && echo "Initiates a reverse SSH session using a proxy for the current user and a given port
 
-	usage: revsshInit <proxy> <PORT> [timeout]
+	usage: revsshInit <proxy> <forwarded port> <ssh port> [timeout]
 	" && return
 
 	proxy=$1
 	port=$2
-	timeout=${3-30}		# By default the login is set to 30 mins
+	sshport=$3		# By default should be port 22, but force the user to think how secure this truly is
+	timeout=${4-30}		# By default the login is set to 30 mins
 
-	$git_loc/bash_global/network/proxy_init_tunnel.expect $git_loc/bash_global/network $proxy $timeout $port
+	$git_loc/bash_global/network/proxy_init_tunnel.expect $git_loc/bash_global/network $proxy $timeout $port $sshport
 
 	echo -en "\rTERMINATED <-------- \n"
 }
 
+# It is interesting to note that when connecting to a previously initiated session, the user does NOT need to specify
+# what the recieiving ssh port is.
+
 revsshConnect() {
 	[ $# -lt 3 ] && echo "Connects to a reverse ssh session previosly initiated by a given user for a given port through a proxy.
-	usage: revsshConnect <proxy> <user> <port> \"[extra commands]\"
+	usage: revsshConnect <proxy> <user> <forwarded_port> \"[extra commands]\"
 " && return
 
 	proxy=$1
