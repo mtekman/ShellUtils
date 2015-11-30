@@ -12,21 +12,30 @@ alias gpull="git pull"
 alias gcomm="git commit -m"
 alias gpuom="gpu origin master"
 
-function gstat {
+function gcmd {
 
-	cd $git_loc
+	dir=`readlink -f $git_loc/../MAIN_REPOS`
+	command="$1"
 
 	base=`pwd`;
-	for f in `find -L ./ -name ".git"`;do 
+	for f in `find $dir -type d -name ".git"`;do 
 		cd $f/..;
 
 		stat=`echo $(git status) | grep -v clean`;
 		[ "$stat" != "" ]\
 		&& echo -e "\n--> `dirname $f`:\n" \
-		&& git status;
+		&& $command;
 
 		cd $base;
 	done
+}
+
+function gstall {
+	gcmd "git status"
+}
+
+function gpall {
+	gcmd "git pull"
 }
 
 
