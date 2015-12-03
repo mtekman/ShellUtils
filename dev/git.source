@@ -21,9 +21,9 @@ function gcmd {
 	for f in `find $dir -type d -name ".git"`;do 
 		cd $f/..;
 
-		stat=`echo $(git status) | grep -v clean`;
-		[ "$stat" != "" ]\
-		&& echo -e "\n--> `dirname $f`:\n" \
+#		stat=`echo $(git status) | grep -v clean`;
+#		[ "$stat" != "" ] &&\
+		echo -e "\n--> `dirname $f`:\n" \
 		&& $command;
 
 		cd $base;
