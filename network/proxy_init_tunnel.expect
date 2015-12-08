@@ -9,7 +9,12 @@ set timearg [lindex $argv 2]
 set portarg [lindex $argv 3]
 set sshport [lindex $argv 4]
 
-set salt [getsalt "salt: "]
+set salt [ lindex $argv 5 ]
+if {$salt eq ""} {
+	set salt [getsalt "salt: "]
+}
+
+
 set proxy_pass [getpass $working_dir $proxy_host $salt]
 
 set timeout [expr $timearg*60]
