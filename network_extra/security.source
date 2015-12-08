@@ -2,11 +2,12 @@
 
 secure_chromium() {
 
-    [ $# != 1 ] && echo "secure_chromium <port>" >&2 && return
+    [ $# -lt 2 ] && echo "secure_chromium <port> <proxy_host and port args>" >&2 && return
 
     port=$1
+    rest="$2"
 
-    xfce4-terminal -e "ssh -vTND $port $socrates"
+    xfce4-terminal -e "sudo ssh -vTND $port $rest"
 
     bin=chromium
     $bin -h >/dev/null 2>&1
