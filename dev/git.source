@@ -16,31 +16,40 @@ function gcmd {
 
 	dir=`readlink -f $git_loc/../MAIN_REPOS`
 	command="$1"
+	match="${2-FETCH_HEAD}"
+
+#	back="/./"
+	[ "$match" = "FETCH_HEAD" ]  && back="/../" || back="/./"
 
 	base=`pwd`;
-	for f in `find $dir -type d -name ".git"`;do 
-		cd $f/..;
+	for f in `find $git_loc $dir -type f -name "$match"`;do 
+		f=`dirname $f`/$back/
+		cd $f;
 
 #		stat=`echo $(git status) | grep -v clean`;
 #		[ "$stat" != "" ] &&\
-		echo -e "\n--> `dirname $f`:\n" \
-		&& $command;
+		echo -e "\n--> `readlink -f $f`:\n" \
+		&& $command
+		
+#		[ "`echo \"$out\" | grep modified`" != "" ]
 
 		cd $base;
 	done
 }
 
-function gstall {
-	gcmd "git status"
-}
-
-function gpall {
-	gcmd "git pull"
-}
+alias gstall="gcmd \"git status\""
+alias gpall="gcmd \"git pull\""
 
 
 function git-author {
 	[ $# != 1 ] && echo -e "\n\tgit-author <author>\n\n changes the author of previous commits to a new one" && return
+
+
+
+
+
+
+
 
 	git filter-branch -f --env-filter 'export GIT_COMMITTER_NAME=junta12; export GIT_COMMITTER_EMAIL="junta12"; export GIT_AUTHOR_NAME=junta12; export GIT_AUTHOR_EMAIL=junta12' --tag-name-filter cat -- --branches --tags
 
