@@ -1,32 +1,37 @@
 #!/bin/bash
 
-# Are we chrooted?
-ending="\$"
-texter=$txtgrn
+ps_end="\$"
+ps_scrn=""
+ps_user=$bldred
+ps_atsy=$txtylw
+ps_text=$txtgrn
 
+# Are we chrooted?
 if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
-	ending=">>"
-	texter=$txtylw
+	ps_end=">>"
+	ps_text=$txtylw
 fi
 
 # Are we screened?
-[ "$STY" != "" ]  && screener="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]"
+[ "$STY" != "" ]  && ps_scrn="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
 
+# Are we ssh'd?
+[ "$SSH_CLIENT" != "" ] && ps_text=$txtylw
 
 
 PROMPT_DIRTRIM=2
 
 PS1="\
-\[$screener\]\
-\[$bldred\]\
+\[$ps_scrn\]\
+\[$ps_user\]\
 \u\
-\[$txtylw\]@\
+\[$ps_atsy\]@\
 \[$hostcolor\]\
 \h\
 \[$txtrst\]\
 :\
-\[$texter\]\
+\[$ps_text\]\
 \w\
 \[$txtrst\]\
-$ending \
+$ps_end \
 \[$txtrst\]"
