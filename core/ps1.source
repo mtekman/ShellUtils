@@ -16,7 +16,7 @@ fi
 [ "$STY" != "" ]  && ps_scrn="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
 
 # Are we ssh'd?
-[ "$SSH_CLIENT" != "" ] && ps_text=$txtylw
+[ "$SSH_CLIENT" != "" ] && ps_user=$bldylw && hostcolor=$txtpur
 
 
 PROMPT_DIRTRIM=2
