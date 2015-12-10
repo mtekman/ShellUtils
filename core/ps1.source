@@ -3,7 +3,7 @@
 ps_end="\$"
 ps_scrn=""
 ps_user=$bldred
-ps_atsy=$txtylw
+ps_atsy=$txtwht
 ps_text=$txtgrn
 
 # Are we chrooted?
@@ -17,8 +17,7 @@ fi
 [ "$STY" != "" ]  && ps_scrn="[$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
 
 # Are we ssh'd?
-[ "$SSH_CLIENT" != "" ] && ps_user=$bldylw && hostcolor=$txtpur
-
+[ "$SSH_CLIENT" != "" ] && bak=$bakblu && hostcolor=$hostcolor$bak && ps_user=$ps_user$bak
 
 PROMPT_DIRTRIM=2
 
