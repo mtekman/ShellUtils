@@ -8,12 +8,13 @@ ps_text=$txtgrn
 
 # Are we chrooted?
 if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
+	ps_scrn="[chroot]"
 	ps_end=">>"
 	ps_text=$txtylw
 fi
 
 # Are we screened?
-[ "$STY" != "" ]  && ps_scrn="[screen:$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
+[ "$STY" != "" ]  && ps_scrn="[$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
 
 # Are we ssh'd?
 [ "$SSH_CLIENT" != "" ] && ps_user=$bldylw && hostcolor=$txtpur
