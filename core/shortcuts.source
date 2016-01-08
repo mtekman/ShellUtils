@@ -1,0 +1,39 @@
+#!/bin/bash
+
+function go(){
+
+    location_file=~/.go_shortcuts
+    touch $location_file
+
+    key=$1
+    rem=$2
+    [ "$key" = "" ] && echo "
+Shortcut keys to stored locations:
+
+ usage:    go <key> [--remove]
+
+if key exists, it goes to it
+if not it stores current location for that key
+" && return;
+
+    declare -A locations;
+    source -- "$location_file" 2>/dev/null
+
+    if [ ${locations[$key]+_} ]; then
+
+        if [ "$rem" == "--remove" ]; then
+            unset locations[$key];
+            echo "Removed $key"
+        else
+            cd ${locations[$key]};
+        fi
+
+    else
+        loc=`pwd`
+        locations[$key]=$loc
+        echo "Stored $key -> $loc"
+    fi
+
+    declare -p locations > $location_file
+}
+
