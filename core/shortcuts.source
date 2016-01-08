@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function go(){
 
     location_file=~/.go_shortcuts
@@ -36,4 +37,20 @@ if not it stores current location for that key
 
     declare -p locations > $location_file
 }
+
+function go_completion(){
+    local cur
+
+    declare -A locations;
+    source -- "$location_file" 2>/dev/null
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $(compgen -W "$(echo ${!locations[@]})" -- $cur ) )  
+
+    return 0
+}
+
+complete -F go_completion go
 
