@@ -3,7 +3,6 @@
 
 function go(){
 
-    location_file=~/.go_shortcuts
     touch $location_file
 
     key=$1
@@ -31,15 +30,16 @@ if not it stores current location for that key
 
     else
         loc=`pwd`
-        locations[$key]=$loc
-        echo "Stored $key -> $loc"
+        read -p "Store: $key -> $loc ? [y/n] " ans && [ "$ans" = "y" ] && locations[$key]=$loc && echo "Stored"
     fi
 
     declare -p locations > $location_file
 }
 
-function go_completion(){
+function __go_completion(){
     local cur
+
+    location_file=~/.go_shortcuts
 
     declare -A locations;
     source -- "$location_file" 2>/dev/null
@@ -52,5 +52,5 @@ function go_completion(){
     return 0
 }
 
-complete -F go_completion go
+complete -F __go_completion go
 
