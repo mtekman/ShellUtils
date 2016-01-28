@@ -4,7 +4,8 @@ playRandom(){
 
 	pwd=$(basename `pwd`)
 
-	enable_rating=$1
+	enable_rating=""
+	enable_rename="Y"
 	rating_dir=~/music_ratings/
 
 	if [ "$pwd" != "Music" ] || [ "$pwd" != "Audio" ] || ["$pwd" != "Songs" ]; then
@@ -45,6 +46,19 @@ playRandom(){
 					echo "Invalid range, try again."
 #					continue
 				fi
+			fi
+
+			if [ "$enable_rename" != "" ];then
+			    read -p "rename to (skip with enter): " ans;
+
+			    if [ "$ans" = "" ]; then
+				echo "skip";
+			    else
+				mv $f `dirname $f`/$ans;
+				[ "$?" = 0 ] && echo "Moved" || echo "Error!"
+			    fi
+			    sleep 1;
+			    break;
 			fi
 		done
 	done
