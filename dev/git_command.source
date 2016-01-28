@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function gcmd {
+
+    dir=$1
+    command="$2"
+
+    echo "dir=$dir"
+    echo "command=$command"
+
+    [ "$command" = "" ] || [ "$dir" = "" ] && echo -e "
+\t`basename $0` <dir> \"git-command\" [ \"match id\" ]
+
+Performs a git operation over all gits found off a dir" && return
+
+    match="${3-FETCH_HEAD}"
+
+    [ "$match" = "FETCH_HEAD" ]  && back="/../" || back="/./"
+
+    base=`pwd`;
+
+    for f in `find $dir -type f -name "$match" | grep -v "eski"`;do 
+	f=`dirname $f`/$back/
+	cd $f;
+	
+	echo -e "\n--> `readlink -f $f`:\n" \
+            && $command
+	
+	cd $base;
+    done
+
+    echo "FINIT!"
+
+}
+
+# ensures that this can be called as a .sh scripts
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && echo "[Direct Exec]" && gcmd $1 "$2" $3
