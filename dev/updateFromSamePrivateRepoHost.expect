@@ -1,0 +1,42 @@
+#!/usr/bin/expect -f
+
+# updateAllBlah.expect <salt_dir> <git loc> <gcmd abs path> <remote@remote> [salt]
+
+set salt_dir [lindex $argv 0]
+source $salt_dir/salt.expect
+
+set git_loc [ lindex $argv 1 ]
+set gcmd_script [ lindex $argv 2 ]
+set proxy_host [ lindex $argv 3 ]
+
+set salt [ lindex $argv 4 ]
+if {$salt eq ""} {
+	set salt [getsalt "salt: "]
+}
+
+set proxy_pass [getpass $salt_dir $proxy_host $salt]
+
+proc init_connect { } {
+
+    global gcmd_script
+    global git_loc
+    
+    set message "Updated All"
+    set breaker "N"
+    
+    uplevel #0 spawn $gcmd_script $git_loc {"git pull"}
+
+    while {"$breaker" != "Y"} {
+	expect {
+	    "assword " {
+		
+		send "$::proxy_pass\n"
+	    }
+	    "FINIT!" {
+		set breaker "Y"
+	    }
+	}
+    }
+}
+
+init_connect
