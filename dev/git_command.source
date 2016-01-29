@@ -33,5 +33,22 @@ Performs a git operation over all gits found off a dir" && return
 
 }
 
+
+function gpall {
+
+    [ $# = 0 ] && echo -e "gpall [salt] [main]\nwhere main == .essential" && return -1
+
+    salt=$1
+    [ "$2" = "main" ] && match=".essential"
+    
+    $git_loc/bash_global/dev/updateFromSamePrivateRepoHost.expect\
+	$git_loc/bash_global/network/\
+	`readlink -f $git_loc/../`\
+	$git_loc/bash_global/dev/git_command.source\
+	$salt\
+	$match
+    
+}
+
 # ensures that this can be called as a .sh scripts
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] && echo "[Direct Exec]" && gcmd $1 "$2" $3

@@ -1,36 +1,42 @@
 #!/usr/bin/expect -f
 
-# updateAllBlah.expect <salt_dir> <git loc> <gcmd abs path> <remote@remote> [salt]
+# updateAllBlah.expect <salt_dir> <git loc> <gcmd abs path> [salt]
 
 set salt_dir [lindex $argv 0]
 source $salt_dir/salt.expect
 
 set git_loc [ lindex $argv 1 ]
 set gcmd_script [ lindex $argv 2 ]
-set proxy_host [ lindex $argv 3 ]
 
-set salt [ lindex $argv 4 ]
-if {$salt eq ""} {
-	set salt [getsalt "salt: "]
-}
-
-set proxy_pass [getpass $salt_dir $proxy_host $salt]
+set salt [ lindex $argv 3 ]
+set match [ lindex $argv 4 ]
 
 proc init_connect { } {
 
-    global gcmd_script
-    global git_loc
+#    global gcmd_script
+#    global git_loc
+    global salt
+    global match
     
     set message "Updated All"
     set breaker "N"
     
-    uplevel #0 spawn $gcmd_script $git_loc {"git pull"}
+    uplevel #0 spawn $::gcmd_script $::git_loc {"git pull"} $match
 
     while {"$breaker" != "Y"} {
 	expect {
-	    "assword " {
+	    "assword*" {
 		
-		send "$::proxy_pass\n"
+		set match $expect_out(0,string)
+		set proxy_host [string range $match 21 end-3]
+
+		if {$salt eq ""} {
+		    set salt [getsalt "salt for $proxy_pass: "]
+		}
+		set proxy_pass [getpass $::salt_dir $proxy_host $salt]
+		
+#		send_user "\n$proxy_pass\n"
+		send "$proxy_pass\n"
 	    }
 	    "FINIT!" {
 		set breaker "Y"
