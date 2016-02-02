@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+webm2mp4() {
+
+    [ $# -lt 1 ] && echo "webm2mp4 <video.webm> -->  writes to <video.mp4>" && return -1
+
+    vid=`readlink -f $1`
+    out=$( echo `basename $vid` | awk -F"." '{print $1}' )".mp4"
+
+    duration=$(ffprobe -i $vid 2>&1 | grep -oP '(?<=Duration:\s)[0-9:.]+')
+
+    hh=`echo $duration | awk -F":" '{print $1}'`
+    mm=`echo $duration | awk -F":" '{print $2}'`
+    ss=`echo $duration | awk -F":" '{print $3}'`
+
+    min_secs=10
+    total_secs=$( echo "scale=2;($hh * 60 * 60) + ($mm * 60) + $ss" | bc )
+    num_times_repeat=$( echo "$min_secs / $total_secs" | bc )
+ 
+    ffmpeg -f concat -i <(for i in `seq 1 $num_times_repeat`; do printf "file '%s'\n" $vid; done) -an -c:v libx264 -crf 19 $out
+    echo $out
+}
