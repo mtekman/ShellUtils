@@ -68,6 +68,10 @@ toNokia() {
 }
 
 
+
+
+
+
 convertAll() {
    if [ $# != 1 ]; then
       echo -e "$bldred Give a folder name! $txtrst" >&2
