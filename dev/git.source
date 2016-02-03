@@ -14,7 +14,7 @@ alias gpuom="gpu origin master"
 
 
 # gcmd is sourced already at this point
-alias gstall="gcmd $git_loc \"git status\""
+#alias gstall="gcmd $git_loc \"git status\""
 #alias gpall="gcmd $git_loc \"git pull\""
 
 
