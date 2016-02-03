@@ -4,51 +4,59 @@ function gcmd {
 
     dir=$1
     command="$2"
+    match="$3"
+
+    back="/../"
+    if [ "$match" = "" ]; then
+	match="HEAD"
+	back="/./"
+    fi
 
     echo "dir=$dir"
     echo "command=$command"
+    echo "match=$match"
 
     [ "$command" = "" ] || [ "$dir" = "" ] && echo -e "
 \t`basename $0` <dir> \"git-command\" [ \"match id\" ]
 
 Performs a git operation over all gits found off a dir" && return
 
-    match="${3-FETCH_HEAD}"
-
-    [ "$match" = "FETCH_HEAD" ]  && back="/../" || back="/./"
-
     base=`pwd`;
-
     for f in `find $dir -type f -name "$match" | grep -v "eski"`;do 
 	f=`dirname $f`/$back/
 	cd $f;
 	
-	echo -e "\n--> `readlink -f $f`:\n" \
+	echo -e "\n--> `readlink -f $f`:" \
             && $command
 	
 	cd $base;
     done
 
     echo "FINIT!"
-
 }
 
 
-function gpall {
 
-    [ $# = 0 ] && echo -e "gpall [salt] [main]\nwhere main == .essential" && return -1
 
-    salt=$1
-    [ "$2" = "main" ] && match=".essential"
-    
+function gbatch {
+
+    comm=$1
+    [ "$comm" = "" ] && echo -e "gbatch 'command' [main]\nwhere main == .essential" && return -1
+    [ "$2" = "main" ] && match=".essential" || match="HEAD"
+
     $git_loc/bash_global/dev/updateFromSamePrivateRepoHost.expect\
 	$git_loc/bash_global/network/\
 	`readlink -f $git_loc/../`\
 	$git_loc/bash_global/dev/git_command.source\
-	$salt\
-	$match
+	$match\
+	"$comm"
     
 }
 
+
+alias gpall="gbatch \"git pull\""
+alias gstall="gbatch \"git status\""
+
+
 # ensures that this can be called as a .sh scripts
-[[ "${BASH_SOURCE[0]}" == "${0}" ]] && echo "[Direct Exec]" && gcmd $1 "$2" $3
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && echo "[Direct Exec]" && gcmd $1 "$2" "$3"
