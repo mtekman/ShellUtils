@@ -6,10 +6,13 @@ function gcmd {
     command="$2"
     match="$3"
 
-    back="/../"
-    if [ "$match" = "" ]; then
-	match="HEAD"
-	back="/./"
+    back="/./"
+    op="find $dir -type f -name \"$match\" | grep -v eski"
+
+    if [ "$match" = ".git" ]; then
+	op="find $dir -type d -name \"$match\" | grep -v eski"
+#	back="/./"
+	echo "DIR SEARCH"
     fi
 
     echo "dir=$dir"
@@ -22,7 +25,7 @@ function gcmd {
 Performs a git operation over all gits found off a dir" && return
 
     base=`pwd`;
-    for f in `find $dir -type f -name "$match" | grep -v "eski"`;do 
+    for f in `eval $op`;do 
 	f=`dirname $f`/$back/
 	cd $f;
 	
@@ -42,7 +45,7 @@ function gbatch {
 
     comm=$1
     [ "$comm" = "" ] && echo -e "gbatch 'command' [main]\nwhere main == .essential" && return -1
-    [ "$2" = "main" ] && match=".essential" || match="HEAD"
+    [ "$2" = "main" ] && match=".essential" || match=".git"
 
     $git_loc/bash_global/dev/updateFromSamePrivateRepoHost.expect\
 	$git_loc/bash_global/network/\
