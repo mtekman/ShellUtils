@@ -1,0 +1,41 @@
+#!/bin/bash
+
+function timer() {
+
+    update=1
+    seconds=0   
+    if [[ "$1" == *s ]]; then
+	seconds=${1%s}
+    elif [[ "$1" == *m ]]; then
+	seconds=$(( ${1%m} * 60 ))
+	update=10 #every 10 seconds
+    elif [[ "$1" == *h ]]; then
+	seconds=$(( ${1%h} * 60 * 60 ))
+	update=60 #every minute
+    else
+	seconds=$1
+    fi
+    
+    tput civis  # invisib cursor
+
+    cols=`tput cols`
+    
+    background=`printf '_%.0s' $(seq 1 $cols)`
+    echo -en "\r$background"
+
+    tmp=0
+    while [ $tmp -lt $seconds ]; do
+
+	sleep $update
+	advanced_time=$(( $tmp + $update ))
+	advanced_cols=$(( ($cols * $advanced_time) / $seconds ))
+	progress=`printf '=%.0s' $(seq 1 $advanced_cols) | sed 's/$/>/'`
+
+	echo -en "\r$progress\r"
+
+	tmp=$advanced_time
+    done
+
+    tput cnorm
+    echo 
+}
