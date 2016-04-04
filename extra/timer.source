@@ -24,17 +24,23 @@ function timer() {
     echo -en "\r$background"
 
     tmp=0
+    down=$seconds
+    progress=""
     while [ $tmp -lt $seconds ]; do
 
 	sleep $update
+        down=$(( $down - $update ))
+
 	advanced_time=$(( $tmp + $update ))
 	advanced_cols=$(( ($cols * $advanced_time) / $seconds ))
-	progress=`printf '=%.0s' $(seq 1 $advanced_cols) | sed 's/$/>/'`
+	progress=`printf '=%.0s' $(seq 1 $advanced_cols) | sed "s/\====$/[$down]>/"`
 
 	echo -en "\r$progress\r"
 
 	tmp=$advanced_time
     done
+
+    echo  -e "\r\033[33;5;7m"$progress"\033[0m"
 
     tput cnorm
     echo 
