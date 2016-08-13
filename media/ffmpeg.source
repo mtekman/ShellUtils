@@ -8,7 +8,7 @@ donekey="_OUT"  # This means that this vid has already been
                 # processed and can be skipped from further selection
 
 max_width=500   # max allowed width for playing nominally on N900
-container=mkv   # Holds virtually any stream 
+container=mkv    # Holds virtually any stream 
 encoder=libx264   # Codec compatible with N900
 
 
@@ -58,6 +58,43 @@ toNokia() {
     if [ $width -gt $max_width ]; then
         $ffbin -i $file -s $max_width"x"$height -an -q:v 0 -c:v $encoder $rat $outfile"."$container
         
+    else
+       echo "Skip: $outfile, width=$width, moving to $2"
+       mv $1 $2/
+    fi
+  else
+    echo "Give file and output folder!"
+  fi
+}
+
+
+toJolla() {
+  if [ $# = 2 ]; then
+    file=$1
+    outfile=$2/$( echo `basename $file` | awk -F "." -v k=$donekey '{print $(NF-1)k}' )
+
+#    rate=$(vidrate $file)
+    
+    max_width=850
+    container=mp4
+    width=$(vidwidth $file)
+    aspect=$(vidaspect $file)
+    height=$(vidCalcHeight $max_width $aspect)
+
+    if [ $width -gt $max_width ]; then
+	rm mylist.txt
+
+	timer=`ffprobe -i $file -show_format -v quiet | sed -n 's/duration=//p' | awk -F  '.' '{print $1}'`
+	loops=$(( 30 / $timer ))
+	echo "timer=$timer LOOPS=$loops"
+
+	if [ $loops -gt 1 ]; then
+		for i in `seq 1 $loops`; do printf "file '%s'\n" $file >> mylist.txt; done
+	else
+		echo "file '"$file"'" > mylist.txt
+	fi
+
+	$ffbin -f concat -i mylist.txt -s $max_width"x"$height -an -q:v 0 -c:v libx264 $outfile"."$container
     else
        echo "Skip: $outfile, width=$width, moving to $2"
        mv $1 $2/
