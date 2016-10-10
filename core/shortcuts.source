@@ -3,6 +3,7 @@
 
 function go(){
 
+    location_file=~/.go_shortcuts
     touch $location_file
 
     key=$1
