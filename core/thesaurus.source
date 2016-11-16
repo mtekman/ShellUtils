@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#!/bin/sh 
+#-------- 
+# Command line thesaurus 
+
+#function thes() {
+	BROWSER="/usr/bin/lynx -source" 
+	WEBSITE="http://thesaurus.reference.com/search?q=$1" 
+	#HTML2TEXT="/usr/bin/html2text -style compact"
+	HTML2TEXT="/usr/bin/html2text " 
+ 
+	if test $1; then 
+	    ${BROWSER} ${WEBSITE} | ${HTML2TEXT} | ${PAGER} 
+	else 
+	    echo "Usage: $0 word" 
+	    exit 1 
+	fi 
+#}
