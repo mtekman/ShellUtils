@@ -1,0 +1,5 @@
+
+
+alias gvo="gv --orientation=PORTRAIT"
+alias mp="mpv --no-video"
+alias gp="gpicview"
