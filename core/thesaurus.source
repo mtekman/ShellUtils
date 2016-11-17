@@ -12,6 +12,7 @@ function thes() {
  | html2text --ignore-links\
  | sed -n '/^##  Syn/{:s /\n##/!{N;b s};/.*/p}'\
  | grep -v '##'\
+ | sed -r 's/_([^_]+)_\s+\*\*([^*]+)\*\*/\"\2\" [\1]\n/'\
  | tr '\n' '\r'\
  | sed 's/\r\s\s\*\s/ | /g'\
  | tr '\r' '\n'"
