@@ -2,6 +2,8 @@
 # Command line thesaurus 
 
 function thes() {
+	isOnline=`ip a | grep "UP" | grep -v "lo:"`
+
 	BROWSER="/usr/bin/lynx -source" 
 	WEBSITE="http://thesaurus.reference.com/search?q=$1" 
 
@@ -14,7 +16,7 @@ function thes() {
  | sed 's/\r\s\s\*\s/ | /g'\
  | tr '\r' '\n'"
  
-	if test $1; then 
+	if [ "$isOnline" != "" ] && test $1; then 
 	    eval "${BROWSER} ${WEBSITE} ${FILTER} "
 	else 
 	    echo "Usage: $0 word" 
