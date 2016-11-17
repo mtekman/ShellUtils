@@ -1,26 +1,23 @@
 #!/bin/bash
-
-#!/bin/sh 
-#-------- 
 # Command line thesaurus 
 
 function thes() {
 	BROWSER="/usr/bin/lynx -source" 
 	WEBSITE="http://thesaurus.reference.com/search?q=$1" 
-	#HTML2TEXT="/usr/bin/html2text -style compact"
-	HTML2TEXT="/usr/bin/html2text " 
+
+	FILTER="\
+ | sed 's/\bstar\b//g'\
+ | html2text --ignore-links\
+ | sed -n '/^##  Syn/{:s /\n##/!{N;b s};/.*/p}'\
+ | grep -v '##'\
+ | tr '\n' '\r'\
+ | sed 's/\r\s\s\*\s/ | /g'\
+ | tr '\r' '\n'"
  
 	if test $1; then 
-	    ${BROWSER} ${WEBSITE} | ${HTML2TEXT} | ${PAGER} 
+	    eval "${BROWSER} ${WEBSITE} ${FILTER} "
 	else 
 	    echo "Usage: $0 word" 
 	    exit 1 
 	fi 
-
-    sed 's/\bstar\b//g'\
- | html2text --ignore-links\
- | sed -n '/^##  Syn/{:s /\n##/!{N;b s};/.*/p}'\
- | grep -v "##"\
- | sed -n '/ \* /{:s /\n  \* /!{N;b s};/.*/p}'
-
 }
