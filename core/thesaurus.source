@@ -4,7 +4,7 @@
 #-------- 
 # Command line thesaurus 
 
-#function thes() {
+function thes() {
 	BROWSER="/usr/bin/lynx -source" 
 	WEBSITE="http://thesaurus.reference.com/search?q=$1" 
 	#HTML2TEXT="/usr/bin/html2text -style compact"
@@ -16,4 +16,11 @@
 	    echo "Usage: $0 word" 
 	    exit 1 
 	fi 
-#}
+
+    sed 's/\bstar\b//g'\
+ | html2text --ignore-links\
+ | sed -n '/^##  Syn/{:s /\n##/!{N;b s};/.*/p}'\
+ | grep -v "##"\
+ | sed -n '/ \* /{:s /\n  \* /!{N;b s};/.*/p}'
+
+}
