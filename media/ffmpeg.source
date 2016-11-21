@@ -73,15 +73,18 @@ toJolla() {
     file=$1
     outfile=$2/$( echo `basename $file` | awk -F "." -v k=$donekey '{print $(NF-1)k}' )
 
-#    rate=$(vidrate $file)
-    
+#    rate=$(vidrate $file) 
+    max_br="-b:v 350k"
+    container=webm
+    encoder=vp8
+
     max_width=850
-    container=mp4
+
     width=$(vidwidth $file)
     aspect=$(vidaspect $file)
     height=$(vidCalcHeight $max_width $aspect)
 
-    if [ $width -gt $max_width ]; then
+#    if [ $width -gt $max_width ]; then
 	rm mylist.txt
 
 	timer=`ffprobe -i $file -show_format -v quiet | sed -n 's/duration=//p' | awk -F  '.' '{print $1}'`
@@ -94,11 +97,12 @@ toJolla() {
 		echo "file '"$file"'" > mylist.txt
 	fi
 
-	$ffbin -f concat -i mylist.txt -s $max_width"x"$height -an -q:v 0 -c:v libx264 $outfile"."$container
-    else
-       echo "Skip: $outfile, width=$width, moving to $2"
-       mv $1 $2/
-    fi
+	$ffbin -f concat -i mylist.txt -s $max_width"x"$height\
+               -an -q:v 0 -c:v $encoder $max_br $outfile"."$container
+#    else
+#       echo "Skip: $outfile, width=$width, moving to $2"
+#       mv $1 $2/
+#    fi
   else
     echo "Give file and output folder!"
   fi
