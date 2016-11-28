@@ -1,8 +1,8 @@
 #!/bin/bash
 
+location_file=~/.go_shortcuts
 
 function go(){
-    location_file=~/.go_shortcuts
     touch $location_file
 
     key=$1
@@ -38,8 +38,6 @@ if not it stores current location for that key
 
 function __go_completion(){
     local cur
-
-    location_file=~/.go_shortcuts
 
     declare -A locations;
     source -- "$location_file" 2>/dev/null

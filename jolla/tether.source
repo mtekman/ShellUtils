@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Connects to the latest usb device
+dev=`ip a | grep -oP "(usb|enp0s[^ ]*)[0-9]"`
+echo "listen on $dev"
+sudo dhcpcd $dev
+sudo ip route del default via 192.168.1.1
+ping 8.8.8.8
