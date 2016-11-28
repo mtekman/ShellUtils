@@ -22,6 +22,12 @@ function collateAllFromDay(){
 }
 
 
+# Work, Home, Mind, Body
+# - More than 3 hours
+# - Learned about how to fix something
+# - Wont or will, music, caffeine, water
+# - Ride, run, avoid sweet/diet, avoid chocolate.
+
 function makeEntry(){
 
     checkPreviousDatesForCollation;
@@ -51,5 +57,7 @@ function checkPreviousDatesForCollation(){
     [ "$tobecollated" != "" ] && for ymd in $tobecollated; do collateAllFromDay $ymd; done;  
 }
 
+#function grabLast
 
-makeEntry
+
+#makeEntry
