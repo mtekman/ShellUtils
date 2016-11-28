@@ -17,10 +17,10 @@ function thes() {
  | sed 's/\r\s\s\*\s/ | /g'\
  | tr '\r' '\n'"
  
-	if [ "$isOnline" != "" ] && test $1; then 
+	if [ "$isOnline" != "" ] &&  [ "$1" != "" ]; then 
 	    eval "${BROWSER} ${WEBSITE} ${FILTER} "
 	else 
 	    echo "Usage: $0 word" 
-	    exit 1 
+	    return
 	fi 
 }

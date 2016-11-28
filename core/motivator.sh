@@ -1,9 +1,9 @@
 
 # Takes one reminder and displays it for each bash
-function showReminder(){
-	remfile=/nomansland/personal_scripts/reminder.txt;
+function showMotivator(){
 
-	! [ -e $remfile ] && echo "Reminder not found " >&2 && emacs $remfile;
+	remfile=/nomansland/personal_scripts/motivator.txt
+	! [ -e $remfile ] && echo "Motivator not found " >&2 && emacs $remfile
 
 	numlines=`grep -v "^$" $remfile | wc -l`;
 
@@ -14,4 +14,9 @@ function showReminder(){
 	echo -e "$txtylw$outline$txtrst"
 }
 
-showReminder
+function editMotivator(){
+	remfile=/nomansland/personal_scripts/motivator.txt;
+	emacs $remfile;
+}
+
+showMotivator
