@@ -3,10 +3,5 @@
 EDITOR=nano
 alias ls="ls --color=auto --group-directories-first"
 
-git_loc="/nomansland/personal_scripts/"
 start_dir="$HOME"
 hostcolor="$txtylw"
-
-alias personal="cd $git_loc"
-alias workdir="cd $git_loc/W*/w*/*/*w*2/"
-alias bindir="cd /nomansland/builds/*w*/"

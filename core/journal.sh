@@ -2,10 +2,10 @@
 
 journal_loc=/nomansland/personal_scripts/journal/
 
-! [ -e $journal_loc ] && mkdir $journal_loc
-
 
 function collateAllFromDay(){
+    ! [ -e $journal_loc ] && mkdir $journal_loc
+
 
     ymd="$1" # yyyy_mm_dd
 
@@ -29,6 +29,7 @@ function collateAllFromDay(){
 # - Ride, run, avoid sweet/diet, avoid chocolate.
 
 function makeEntry(){
+    ! [ -e $journal_loc ] && mkdir $journal_loc
 
     checkPreviousDatesForCollation;
 
