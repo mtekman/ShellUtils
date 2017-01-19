@@ -4,5 +4,5 @@
 dev=`ip a | grep -oP "(usb|enp0s[^ ]*)[0-9]"`
 echo "listen on $dev"
 sudo dhcpcd $dev
-sudo ip route del default via 192.168.1.1
+sudo ip route change via 195.195.96.245
 ping 8.8.8.8

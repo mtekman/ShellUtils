@@ -10,7 +10,7 @@ function go(){
     [ "$key" = "" ] && echo "
 Shortcut keys to stored locations:
 
- usage:    go <key> [--remove]
+ usage:    go <key> [--remove | --replace]
 
 if key exists, it goes to it
 if not it stores current location for that key
@@ -24,6 +24,9 @@ if not it stores current location for that key
         if [ "$rem" == "--remove" ]; then
             unset locations[$key];
             echo "Removed $key"
+	elif [ "$rem" == "--replace" ]; then
+		loc=`pwd`
+	       read -p "Replace: $key -> $loc ? [y/n] " ans && [ "$ans" = "y" ] && locations[$key]=$loc && echo "Replaced"    
         else
             cd ${locations[$key]};
         fi

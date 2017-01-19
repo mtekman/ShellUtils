@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function busyStart {
-	/nomansland/personal_scripts/bash_global/fun/xdo_screen_setup.sh
+	/nomansland/MAIN_REPOS/bash_global/fun/xdo_screen_setup.sh
 }
 
 function busyKill {

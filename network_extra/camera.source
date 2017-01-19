@@ -29,12 +29,12 @@ function remoteCam(){
 
 
 	ssh $remotehost "\
-	 gst-launch v4l2src device=/dev/video0 \
+	 gst-launch-0.10 v4l2src device=/dev/video0 \
 	  ! video/x-raw,height=$height,framerate=$frame/1\
 	  ! videoconvert\
 	  ! jpegenc quality=$qual\
 	  ! filesink location=/dev/stdout"\
-	 | gst-launch filesrc location=/dev/stdin\
+	 | gst-launch-0.10 filesrc location=/dev/stdin\
 	  ! jpegdec\
 	  ! xvimagesink
 }

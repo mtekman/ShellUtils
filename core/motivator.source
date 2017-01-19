@@ -18,5 +18,3 @@ function editMotivator(){
 	remfile=/nomansland/personal_scripts/motivator.txt;
 	emacs $remfile;
 }
-
-showMotivator
