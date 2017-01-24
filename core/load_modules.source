@@ -11,6 +11,20 @@ showmods(){
  | sed 's/\s/\n - /g'
 }
 
+
+__source_all(){
+      dir=$1
+
+      for file in $dir/*.source; do
+                mmmo=`echo $file | awk -F/ '{print $NF}'`}
+
+                [ "$debug" = "Y" ] && echo -e "\t$mmmo"
+                . $file
+                MODULES_LOADED=$MODULES_LOADED" $mmmo"
+        done
+}
+
+
 loadmod(){
 
 	[ $# -lt 1 ] && echo "loadmod <mod folder> [--debug]
@@ -23,13 +37,8 @@ Loads .source modules from the bash_global folder" && return
 
 	dir="$git_loc/bash_global/$mod/"
 
-	for file in $dir/*.source; do
-		mmmo=`echo $file | awk -F/ '{print $NF}'`}
-
-		[ "$debug" = "Y" ] && echo -e "\t$mmmo"
-		. $file
-		MODULES_LOADED=$MODULES_LOADED" $mmmo"
-	done
+	# Load all sources in dir
+	__source_all $dir
 
 	[ "$debug" = "Y" ] && echo ""
 
