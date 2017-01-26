@@ -21,7 +21,10 @@ fi
 
 PROMPT_DIRTRIM=0
 
-PS1=$(tput sc;tput cup 0 0; cols=`tput cols`; form="%$cols"s; format=`printf $form ""`; echo -e "$format\r")\
+#PS1=$(tput sc;tput cup 0 0; cols=`tput cols`; form="%$cols"s; format=`printf $form ""`; echo -e "$format\r")\
+
+# tput not avaialable everywhere, use the escape codes instead
+PS1=`cols=$(stty size | cut -d" " -f2); form="%$cols"s; format=$(printf $form "");echo -e "\033[s \033[0;0f$format\r"`\
 "\[$ps_scrn\]\
 \[$ps_user\]\
 \u\
@@ -36,5 +39,5 @@ PS1=$(tput sc;tput cup 0 0; cols=`tput cols`; form="%$cols"s; format=`printf $fo
 $ps_end \
 \[$txtrst\]\
 \n\
-`tput rc`\
+`echo -e \"\033[u\"`\
 \[$txtgrn\]> \[$txtrst\]"
