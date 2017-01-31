@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+#  Git update scripts
+#
+
+# Sets temp varaiables that only exist for the same bash session
+
+#alias git="git --ignore-submodules=dirty"
+alias gpu="git push -u"
+alias gpull="git pull"
+
+alias gcomm="git commit -m"
+alias gpuom="gpu origin master"
+
+
+# gcmd is sourced already at this point
+#alias gstall="gcmd $git_loc \"git status\""
+#alias gpall="gcmd $git_loc \"git pull\""
+
+
+function git-author {
+	[ $# != 2 ] && echo -e "\n\tgit-author <new_author> <new_email>\n\n changes the author of all previous commits" && return
+
+	name=$1
+	email=$2
+
+	comm1="\
+git filter-branch -f --env-filter '
+CORRECT_NAME=\"$name\"
+CORRECT_EMAIL=\"$email\"
+"
+	comm2="\
+export GIT_COMMITTER_NAME=\"\$CORRECT_NAME\"
+export GIT_COMMITTER_EMAIL=\"\$CORRECT_EMAIL\"
+
+export GIT_AUTHOR_NAME=\"\$CORRECT_NAME\"
+export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
+' --tag-name-filter cat -- --branches --tags\
+"
+	eval "$comm1$comm2"
+}
