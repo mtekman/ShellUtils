@@ -25,6 +25,8 @@ function preamble(){
 
 function findrin()
 {
+	[ $# -lt 1 ] && echo "`basename $0` <hex|lzout>" && return -1
+
 	preamble || return -1
 
 	declare -a progress;
@@ -51,9 +53,9 @@ function findrin()
 #	echo "$scan_wait_lower $scan_wait_upper"
 
 	# Reticulating Splines.... hmmm
-	echo -en "Initialising:\n  *\tconnecting to news feeds..." && randomwait
+	echo -en "Initialising:\n  *\tconnecting to feeds...      " && randomwait
 	echo -en "\t[x]\n  *\tstarting crawler..." && randomwait
-	echo -en "\t\t[x]\n  *\tparsing links..." && randomwait
+	echo -en "\t\t[x]\n  *\tparsing rel. links..." && randomwait
 	echo -en "\t\t[x]\n  *\tstream quality..." && randomwait
 
 	# Quality
@@ -63,21 +65,34 @@ function findrin()
 	sleep `echo "scale=1;($RANDOM / 10000) - 1" | bc | sed 's/-//'`
 	echo -e "\nBegin:"
 
-	while :; do
 
-		# Initial pause
-		max_loops=$(( 5 + ($RANDOM % 5) ))
+	if [ "$1" = "hex" ];then
+		while :; do
 
-		while [ $max_loops -gt 0 ]; do
-			waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
-			scanning $waiter
-			max_loops=$(( $max_loops - 1 ))
-#			echo $waiter $max_loops
+			# Initial pause
+			max_loops=$(( 5 + ($RANDOM % 5) ))
+
+			while [ $max_loops -gt 0 ]; do
+				waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
+				scanning $waiter
+				max_loops=$(( $max_loops - 1 ))
+	#			echo $waiter $max_loops
+			done
+
+			progressdots `echo "20 + ($RANDOM % 20)" | bc` "$bldred[ connection dropped ] - reconnecting$txtrst""---" 5
+			echo -e "\t\t\t\t\t[x]      "
 		done
 
-		progressdots `echo "20 + ($RANDOM % 20)" | bc` "$bldred[ connection dropped ] - reconnecting$txtrst""---" 5
-		echo -e "\t\t\t\t\t[x]      "
-	done
+	elif [ "$1" = "lzout" ];then
+		tmp=`mktemp`.txt
+		journalctl --since yesterday | grep kernel | grep -v "check events logged" | cut -d' ' -f3,5,6- > $tmp
+
+		while read line; do
+			waiter=$(( $scan_wait_lower + ( $RANDOM % $(( $scan_wait_upper - $scan_wait_lower)) )  ))
+			echo $line
+			sleep $waiter
+		done<$tmp
+	fi
 }
 
 # Ah Bash, ye mess.
