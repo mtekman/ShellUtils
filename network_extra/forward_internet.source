@@ -25,9 +25,9 @@ e.g. forward_internet enp3s0 enp2s0
 
     your_ip=`ip address show dev $fibo_net | grep -oP "(?<=(inet ))[0-9.]+"`
 
-    echo "You're now setup for NAT translation. Now, ssh into and fibonnaci run the following:
+    echo "You're now setup for NAT translation. Now, ssh into the remote machine and run the following:
 
-sudo sh -c \"ip route del default && ip route add default via $your_ip && echo 8.8.8.8 > /etc/resolv.conf\"
+sudo sh -c \"ip route del default && ip route add default via $your_ip && echo 'nameserver 8.8.8.8' > /etc/resolv.conf\"
 
 "
 }
