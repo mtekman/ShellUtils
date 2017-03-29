@@ -1,0 +1,34 @@
+#!/bin/bash
+
+function encrypt(){
+
+	[ $# != 3 ] && echo "Encrypts a file based on salt and creates a new file
+
+`basename $0` <file> <new encrypted filename> <salt>
+
+
+" && exit -1
+
+	file=$1
+	newf=$2
+	salt=$3
+
+	openssl enc -aes-256-cbc -salt -in $file -out $newf -k $salt
+}
+
+
+function decrypt(){
+
+	[ $# != 3 ] && echo "Decrypts a file based on salt and creates a new file
+
+`basename $0` <encrypted file> <new plaintext filename> <salt>
+
+
+" && exit -1
+
+	file=$1
+	newf=$2
+	salt=$3
+
+	openssl enc -aes-256-cbc -d -in $file -out $newf -k $salt
+}
