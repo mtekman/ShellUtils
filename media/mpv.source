@@ -1,0 +1,22 @@
+#!/bin/bash
+
+__mp_fft=""
+
+function mpe(){
+
+    [ $# -lt 1 ] && echo -e "Plays mpv audio stream through the FFT equalizer
+
+\t usage: mpe <media.ext>
+
+" && return -1
+
+    if [ "$__mp_fft" = "" ]; then
+        __mp_fft=`mpv --audio-device=help | grep -oP "'[^']+'(?=(\s\(FFT))" | sed "s|'||g"`
+        [ "$__mp_fft" = "" ] && echo "Could not establish FFT sink!" && return -1
+    fi
+
+   IFS='
+'
+
+    mpv --no-video --ao=pulse --audio-device=$__mp_fft $*
+}
