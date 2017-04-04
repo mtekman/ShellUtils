@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function forward_internet {
+    fibo_net=$1 #enp3s0    # local device to access fibonacci
+    gtwy_net=$2 #enp2s0    # local device to access internet
+
+    [ "$gtwy_net" = "" ] && echo "Forwards internet from a machine that has an internet gateway, to a remote machine on a seperate network that does not have internet access.
+
+    usage: forward_internet <remote machine network device>  <gateway network device>
+
+e.g. forward_internet enp3s0 enp2s0
+
+" >&2 && return
+
+    sudo iptables -P INPUT DROP                                                                       # drop every INPUT
+    sudo iptables -P FORWARD DROP                                                                     # drop every FORWARD
+    sudo iptables -A INPUT -i lo -j ACCEPT                                                            # accept loopback-INPUT
+    sudo iptables -A INPUT -i $fibo_net -j ACCEPT                                                     # accept eth0 INPUT
+    sudo iptables -t nat -A POSTROUTING -o $gtwy_net -j MASQUERADE                                    # NAT-Translation
+    sudo iptables -A FORWARD -i $fibo_net -j ACCEPT                                                   # accept FORWARD-Traffic from $fibo_net
+    sudo iptables -A FORWARD -i $gtwy_net -o $fibo_net -m state --state ESTABLISHED,RELATED -j ACCEPT # accept FORWARD-Traffic as reply for existing connections
+    sudo iptables -A INPUT -i $gtwy_net -m state --state ESTABLISHED,RELATED -j ACCEPT                # allow the local computer to access the internet
+    sudo iptables -A INPUT -i $gtwy_net -p icmp --icmp-type echo-request -j ACCEPT                    # allow pings on $gtwy_net
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+
+    your_ip=`ip address show dev $fibo_net | grep -oP "(?<=(inet ))[0-9.]+"`
+
+    echo "You're now setup for NAT translation. Now, ssh into the remote machine and run the following:
+
+sudo sh -c \"ip route del default && ip route add default via $your_ip && echo 'nameserver 8.8.8.8' > /etc/resolv.conf\"
+
+"
+}

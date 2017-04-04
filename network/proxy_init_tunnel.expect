@@ -24,7 +24,7 @@ set count_loop 0
 proc init_connect { loop_number } {
 
 	global pid
-	set pid [uplevel #0 spawn ssh -R $::portarg:localhost:$::sshport $::proxy_host]
+	set pid [uplevel #0 spawn ssh -R $::portarg:localhost:$::sshport $::proxy_host -X]
 	set message "You are now logged in for $::timearg mins on port $::portarg \[$loop_number\]"
 	
 	send_user "connecting...\n"

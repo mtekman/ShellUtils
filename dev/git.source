@@ -19,22 +19,23 @@ alias gpuom="gpu origin master"
 
 
 function git-author {
-	[ $# != 1 ] && echo -e "\n\tgit-author <author>\n\n changes the author of previous commits to a new one" && return
+	[ $# != 2 ] && echo -e "\n\tgit-author <new_author> <new_email>\n\n changes the author of all previous commits" && return
 
-	git filter-branch -f --env-filter 'export GIT_COMMITTER_NAME=junta12; export GIT_COMMITTER_EMAIL="junta12"; export GIT_AUTHOR_NAME=junta12; export GIT_AUTHOR_EMAIL=junta12' --tag-name-filter cat -- --branches --tags
+	name=$1
+	email=$2
 
-	echo "verify local changes, and then update remote via: git push --force --tags origin 'refs/heads/*'"
-}
+	comm1="\
+git filter-branch -f --env-filter '
+CORRECT_NAME=\"$name\"
+CORRECT_EMAIL=\"$email\"
+"
+	comm2="\
+export GIT_COMMITTER_NAME=\"\$CORRECT_NAME\"
+export GIT_COMMITTER_EMAIL=\"\$CORRECT_EMAIL\"
 
-function git-rewrite {
-	git filter-branch -f --env-filter '
-CORRECT_NAME="Mehmet Tekman"
-CORRECT_EMAIL="m.tekman@ucl.ac.uk"
-export GIT_COMMITTER_NAME="$CORRECT_NAME"
-export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
-
-export GIT_AUTHOR_NAME="$CORRECT_NAME"
-export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
-' --tag-name-filter cat -- --branches --tags
-
+export GIT_AUTHOR_NAME=\"\$CORRECT_NAME\"
+export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
+' --tag-name-filter cat -- --branches --tags\
+"
+	eval "$comm1$comm2"
 }
