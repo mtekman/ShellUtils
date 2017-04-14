@@ -2,6 +2,11 @@
 #git_loc=`dirname $0`/../ #  -> a_locations.source has this
 
 
+if [[ -n ${ZSH_VERSION-} ]]; then
+	autoload -U +X bashcompinit && bashcompinit
+fi
+
+
 MODULES_LOADED=" "
 
 
