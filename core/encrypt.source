@@ -7,7 +7,7 @@ function encrypt(){
 `basename $0` <file> <new encrypted filename> <salt>
 
 
-" && exit -1
+" && return -1
 
 	file=$1
 	newf=$2
@@ -24,7 +24,7 @@ function decrypt(){
 `basename $0` <encrypted file> <new plaintext filename> <salt>
 
 
-" && exit -1
+" && return -1
 
 	file=$1
 	newf=$2
