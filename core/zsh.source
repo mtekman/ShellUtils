@@ -7,7 +7,7 @@ if [ "$ZSH" != "" ]; then
 	local ret_status="%(?:%{$fg_bold[green]%}>:%{$fg_bold[red]%}>)"
 
 	PROMPT='$(git_prompt_info)${ret_status} '
-	RPROMPT='%{$fg[black]%}%4c%{$reset_color%}'
+	RPROMPT='%{$fg[black]%}%4c%{$reset_color%}-«%{$fg[green]%}%M%{$reset_color%}%{»%}'
 
 
 	ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}[%{$fg[red]%}"
