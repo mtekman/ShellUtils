@@ -4,14 +4,25 @@
 
 if [ "$ZSH" != "" ]; then
 
-	local ret_status="%(?:%{$fg_bold[green]%}>:%{$fg_bold[red]%}>)"
+   local ps_scrn=""
 
-	PROMPT='$(git_prompt_info)${ret_status} '
-	RPROMPT='%{$fg[black]%}%4c%{$reset_color%}-«%{$fg[green]%}%M%{$reset_color%}%{»%}'
+   # Are we chrooted?
+   if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
+      ps_scrn="[chroot]"
+   fi
+
+   # Are we screened?
+   [ "$STY" != "" ]  && ps_scrn="[$(echo $STY | awk -F'.' '{print $NF}' )]"
 
 
-	ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}[%{$fg[red]%}"
-	ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-	ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}]%{$fg[yellow]%}"
-	ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%}]"
+   local ret_status="%(?:%{$fg_bold[green]%}>:%{$fg_bold[red]%}>)"
+
+   PROMPT='${ps_scrn}$(git_prompt_info)${ret_status} '
+   RPROMPT='%{$fg[black]%}%4c%{$reset_color%}-«%{$fg[green]%}%M%{$reset_color%}%{»%}'
+
+
+   ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}[%{$fg[red]%}"
+   ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
+   ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}]%{$fg[yellow]%}"
+   ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%}]"
 fi
