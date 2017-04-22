@@ -1,0 +1,4 @@
+
+function 4chan(){
+	echo "[].slice.call( document.getElementsByClassName('fileThumb') ).map(x => x.href).join('\n')"
+}
