@@ -1,34 +1,35 @@
 #!/bin/bash
 
-journal_dir=$git_loc/notes/life/journal
-journal_last=$journal_dir/.last
-! [ -d $journal_dir ] && mkdir -p $journal_dir
-! [ -e $journal_last ] && touch $journal_last
-
-
-
 function journal() {
-	
-	[ $# -lt 1 ] && echo "
-journal < new | last | TAB >
 
+    getDir journal_dir
+    getDir journal_last
+
+    ! [ -d $journal_dir ] && mkdir -p $journal_dir
+    ! [ -e $journal_last ] && touch $journal_last
+
+    getVar EDITOR   
+	
+    [ $# -lt 1 ] && echo "
+journal < new | last | TAB >
+        
 " >&2 && return
 
-	local new_var
-	local las_var
-	local id_var
-	local file
+    local new_var
+    local las_var
+    local id_var
+    local file
+    
 
+    case "$1" in
+	"new")id_var=$(date +%Y_%m_%d);;
+	"last")id_var=$(cat $journal_last);;
+    esac
 
-	case "$1" in
-		"new")id_var=$(date +%Y_%m_%d);;
-		"last")id_var=$(cat $journal_last);;
-	esac
+    [ "$id_var" = "" ] && id_var=$1
 
-	[ "$id_var" = "" ] && id_var=$1
-
-	file=$journal_dir/$id_var.txt
-	! [ -e $file ] && echo "
+    file=$journal_dir/$id_var.txt
+    ! [ -e $file ] && echo "
 |  Recap )
 |________________________________
  * 
@@ -44,9 +45,9 @@ journal < new | last | TAB >
 
 " > $file
 
-	$EDITOR $file
+    $EDITOR $file
 
-	echo $id_var > $journal_last
+    echo $id_var > $journal_last
 }
 
 #complete -f -X '$journal_dir/*.txt' journal

@@ -1,0 +1,8 @@
+
+# Log commands into a README file in that folder
+
+function log(){
+	commands="$*"
+	echo "$commands" >> COMMANDS.LOG
+	eval $commands
+}

@@ -7,7 +7,7 @@ function __transfer() {
 
 	syncer="rsync -u -avP"
 
-	dry=$( $syncer -n "$localdir" "$jolladir" 2>&1 | wc -l )
+	dry=$( $syncer -n "$to" "$from" 2>&1 | wc -l )
 #	echo $dry
 	
 	if [ $dry -lt 5 ];then			# Nothing to transfer, hide needless output
@@ -23,16 +23,20 @@ function __transfer() {
 
 function __update()
 {
-	__transfer "$localdir" "$jolladir" "---:------------------------>>"
-	__transfer "$jolladir" "$localdir" "<<-:----------------------:->>"
-	echo ""
-	echo ""
-}
+    # dirs set externally
+    __transfer "$localdir" "$jolladir" "---:------------------------>>"
+    __transfer "$jolladir" "$localdir" "<<-:----------------------:->>"
+    echo ""            
+    echo ""
+}               
 
 
 function __syncNotes() {
 	
 	echo "____________NOTES____________"
+        getVar jolla_sqdb
+        getVar jolla_usb
+
 	localdir=$jolla_sqdb
 	jolladir=$jolla_usb:$localdir  # same place in git
 
@@ -42,7 +46,10 @@ function __syncNotes() {
 function __syncMusic() {
 
 	echo "____________MUSIC____________"
-	localdir=~/Media/Audio/
+
+        getDir music_dir
+        getVar jolla_usb
+
 	jolladir=$jolla_usb:"~/Music/"
 
 	__update

@@ -1,15 +1,5 @@
 #!/bin/bash
 
-mysetup(){
-	. $git_loc/bash_global/optimal_setup.sh
-	sleep 1
-	. $git_loc/bash_global/optimal_setup.sh
-	sleep 1
-	. $git_loc/bash_global/optimal_setup.sh
-};
-
-
-
 backup(){
 	[ $# != 1 ] && echo "backup <file>, makes file.backupN" && return
 	ext=$(echo $1 | awk -F"." '{print $NF}')

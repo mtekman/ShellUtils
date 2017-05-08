@@ -1,16 +1,15 @@
 #!/bin/bash
 # init notes
-notes_dir=$git_loc/notes/quick
-last_file_stor=$notes_dir/.last
-arch_file_stor=$notes_dir/archive
+getDir notes_dir
+getDir notes_last_file_stor
+getDir notes_arch_file_stor
+getVar EDITOR
 
-#EDITOR=nano
-
-! [ -e $last_file_stor ]\
+! [ -e $notes_last_file_stor ]\
  && mkdir -p $notes_dir\
- && touch $last_file_stor
+ && touch $notes_last_file_stor
 
-mkdir -p $arch_file_stor
+mkdir -p $notes_arch_file_stor
 
 
 function notes_usage(){
@@ -49,12 +48,12 @@ function notes() {
 
 	# Last
 	if [ -n "$lst" ]; then
-		! [ -e $last_file_stor ]\
+		! [ -e $notes_last_file_stor ]\
 		 && echo "No last notes file found, please choose from:
 $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 #		 && unset rem rnm lst opt id && return
 
-		file_id=$(cat $last_file_stor)
+		file_id=$(cat $notes_last_file_stor)
 #		file_id=$notes_dir/$id.txt
 	fi
 
@@ -75,7 +74,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 	# Remove
 	if [ -n "$rem" ]; then
 		read -p "Remove $id?[y/n] " ans
-		[[ "$ans" = "y" ]] && rm $file_id && rm $last_file_stor && echo "DONE"
+		[[ "$ans" = "y" ]] && rm $file_id && rm $notes_last_file_stor && echo "DONE"
 #		unset rem rnm lst opt id arv
 		return
 	fi
@@ -84,7 +83,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 	if [ -n "$rnm" ]; then
 		read -p "Rename $id to $rnm_arg?[y/n] " ans
 		[ "$ans" = "y" ] && mv $file_id "$(dirname $file_id)/$rnm_arg.txt"\
-			&& rm $last_file_stor && echo "DONE"
+			&& rm $notes_last_file_stor && echo "DONE"
 #		unset rem rnm lst opt id arv
 		return
 	fi
@@ -92,7 +91,7 @@ $(ls $notes_dir | sed 's/.txt//g' | sed 's/^/ /g')" && return
 	! [ -e $file_id ] && echo -e "$id\n==============\n" > $file_id
 
 	$EDITOR $file_id
-	echo $file_id > $last_file_stor
+	echo $file_id > $notes_last_file_stor
 #	unset rem rnm lst opt id
 }
 export -f notes

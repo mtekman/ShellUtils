@@ -47,10 +47,12 @@ function gbatch {
     [ "$comm" = "" ] && echo -e "gbatch 'command' [main]\nwhere main == .essential" && return -1
     [ "$2" = "main" ] && match=".essential" || match=".git"
 
-    $git_loc/bash_global/dev/updateFromSamePrivateRepoHost.expect\
-	$git_loc/bash_global/network/\
-	`readlink -f $git_loc/../`\
-	$git_loc/bash_global/dev/git_command.source\
+    getDir SHELL_UTILS
+
+    $SHELL_UTILS/dev/updateFromSamePrivateRepoHost.expect\
+	$SHELL_UTILS/network/\
+	`readlink -f $SHELL_UTILS/../../`\
+	$SHELL_UTILS/dev/git_command.source\
 	$match\
 	"$comm"
     

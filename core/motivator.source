@@ -1,8 +1,10 @@
+#!/bin/bash
 
 # Takes one reminder and displays it for each bash
-function showMotivator(){
 
-	remfile=/nomansland/personal_scripts/motivator.txt
+remfile=~/.local/motivator.txt
+
+function showMotivator(){
 	! [ -e $remfile ] && echo "Motivator not found " >&2 && emacs $remfile
 
 	numlines=`grep -v "^$" $remfile | wc -l`;
@@ -15,6 +17,5 @@ function showMotivator(){
 }
 
 function editMotivator(){
-	remfile=/nomansland/personal_scripts/motivator.txt;
 	emacs $remfile;
 }

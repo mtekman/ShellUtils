@@ -1,7 +1,8 @@
 #!/bin/bash
 
 function busyStart {
-	/nomansland/MAIN_REPOS/bash_global/fun/xdo_screen_setup.sh
+    [ "$SHELL_UTILS" = "" ] && echo "SHELL_UTILS unset." && return 0
+    $SHELLUTILS/fun/xdo_screen_setup.sh
 }
 
 function busyKill {

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-journal_loc=/nomansland/personal_scripts/journal/
+# SYMLINK TO THIS LOCATION IF YOU HAVE TO
+journal_loc=~/.local/journal/
 
 
 function collateAllFromDay(){

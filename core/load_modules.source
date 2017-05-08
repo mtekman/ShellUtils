@@ -1,9 +1,7 @@
 #!/bin/bash
-#git_loc=`dirname $0`/../ #  -> a_locations.source has this
-
 
 if [[ -n ${ZSH_VERSION-} ]]; then
-	autoload -U +X bashcompinit && bashcompinit
+    autoload -U +X bashcompinit && bashcompinit
 fi
 
 
@@ -11,9 +9,9 @@ MODULES_LOADED=" "
 
 
 showmods(){
-	echo "$MODULES_LOADED"\
- | sed 's/.source//g'\
- | sed 's/\s/\n - /g'
+    echo "$MODULES_LOADED"\
+        | sed 's/.source//g'\
+        | sed 's/\s/\n - /g'
 }
 
 
@@ -21,56 +19,58 @@ __source_all(){
       dir=$1
 
       for file in $dir/*.source; do
-                mmmo=`echo $file | awk -F/ '{print $NF}'`}
+          mmmo=`echo $file | awk -F/ '{print $NF}'`
 
-                [ "$debug" = "Y" ] && echo -e "\t$mmmo"
-                . $file
-                MODULES_LOADED=$MODULES_LOADED" $mmmo"
-        done
+          [ "$debug" = "Y" ] && echo -e "\t$mmmo"
+          . $file
+          MODULES_LOADED=$MODULES_LOADED" $mmmo"
+      done
 }
 
 
 loadmod(){
 
-	[ $# -lt 1 ] && echo "loadmod <mod folder> [--debug]
+    [ $# -lt 1 ] && echo "loadmod <mod folder> [--debug]
 
 Loads .source modules from the bash_global folder" && return
 
-	mod=$1
-	debug=$2
-	[ "$debug" = "--debug" ] && debug="Y" && echo -e "\nloaded $mod:"
+    mod=$1
+    debug=$2
+    [ "$debug" = "--debug" ] && debug="Y" && echo -e "\nloaded $mod:"
+    
+    getDir SHELL_UTILS
+    dir="$SHELL_UTILS/$mod/"
+    
+    # Load all sources in dir
+    __source_all $dir
 
-	dir="$git_loc/bash_global/$mod/"
+    [ "$debug" = "Y" ] && echo ""
 
-	# Load all sources in dir
-	__source_all $dir
-
-	[ "$debug" = "Y" ] && echo ""
-
-	unset dir debug mod
+    unset dir debug mod
 }
 
 
 module_completion()
 {
-	mod_dir=$git_loc/bash_global/
+    getDir SHELL_UTILS
+    mod_dir=$SHELL_UTILS
 
-	local cur argg arggtest dirr
+    local cur argg arggtest dirr
 
-	COMPREPLY=()
-	cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
 
-	arggtest="${@: -1}"
-	[ "$arggtest" != "" ] && argg=$arggtest
+    arggtest="${@: -1}"
+    [ "$arggtest" != "" ] && argg=$arggtest
 
-#    if [ "$argg" = "/" ]; then
-#        COMPREPLY=( $(compgen -W "$(ls -d $mod_dir/*/ | awk -F'/' '{print $NF}' )" -- $cur ) )
-#    else
-	dirr=$mod_dir/$argg/
-	! [ -d $dirr ] && dirr=$mod_dir   # reset for false folder
+    #    if [ "$argg" = "/" ]; then
+    #        COMPREPLY=( $(compgen -W "$(ls -d $mod_dir/*/ | awk -F'/' '{print $NF}' )" -- $cur ) )
+    #    else
+    dirr=$mod_dir/$argg/
+    ! [ -d $dirr ] && dirr=$mod_dir   # reset for false folder
 
-	COMPREPLY=( $(compgen -W "$(find $dirr -type d | awk -F$dirr '{print $NF}' | grep -v ".git" )" -- $cur ) )
-#    fi
+    COMPREPLY=( $(compgen -W "$(find $dirr -type d | awk -F$dirr '{print $NF}' | grep -v ".git" )" -- $cur ) )
+    #    fi
 
     return 0
 }
