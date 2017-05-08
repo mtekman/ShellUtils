@@ -86,8 +86,4 @@ function detectShellUtils(){
 detectShellUtils
 
 . $SHELL_UTILS/core/load_modules.source
-loadmod core
-loadmod dev
-loadmod network
-
-__source_all $SHELL_UTILS/personal_bash/
+. $SHELL_UTILS/startup_hooks
