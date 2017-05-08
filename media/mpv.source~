@@ -11,13 +11,9 @@ function mpe(){
 " && return -1
 
     if [ "$__mp_fft" = "" ]; then
-        __mp_fft=`mpv --audio-device=help | grep -oP "'[^']+'(?=(\s\(FFT))" | sed "s|'||g"`
+        __mp_fft=`mpv --audio-device=help | grep -oP "'[^']+'(?=(\s\(FFT))" | sed 's|\'||g'`
         [ "$__mp_fft" = "" ] && echo "Could not establish FFT sink!" && return -1
     fi
 
-   IFS='
-'
-
-   clear
-   mpv --no-video --ao=pulse --audio-device=$__mp_fft $*
+    mpv --no-video --ao=pulse --audio-device=$__mp_fft "$*"
 }
