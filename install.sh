@@ -22,4 +22,9 @@ find_in_prof=$(grep -c "$prof_line" $profil_loc)
 [ "$find_in_zzsh" = "0" ] && echo "$zzsh_line" >> $zzshrc_loc
 [ "$find_in_prof" = "0" ] && echo "$prof_line" >> $profil_loc
 
+# Install custom oh-my-zsh theme
+omz_loc=/usr/share/oh-my-zsh/themes/tetris.zsh-theme
+thm_loc=`find $(pwd) -name tetris-zsh-theme.source`
+! [ -e $omz_loc ] && sudo ln -s $thm_loc $omz_loc
+
 echo "Done, please restart the shell"
