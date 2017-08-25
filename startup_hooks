@@ -3,6 +3,7 @@
 loadmod core
 loadmod dev
 loadmod network
+loadmod productivity
 
 # If you have personal scripts, link them to the personal_bash directory
 #
