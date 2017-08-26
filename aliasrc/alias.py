@@ -8,32 +8,39 @@ from xdg.BaseDirectory import xdg_cache_home, xdg_config_home
 class AliasRC:
 
     def __init__(self):
-        self.cachefile = os.path(xdg_cache_home, 'alias.map')
-        self.aliasrc = os.path(xdg_config_home, 'alias.source')
-
-        AliasRC.__filesanity(self.cachefile)
+        #self.cachefile = os.path.join(xdg_cache_home, 'alias.map')
+        #AliasRC.__filesanity(self.cachefile)
+        
+        self.aliasrc = os.path.join(xdg_config_home, 'alias.source')
         AliasRC.__filesanity(self.aliasrc)
 
         self.map = {}
+        self.__readMap()
 
+    
     @staticmethod
     def __filesanity(file):
-        if not os.path.exists(file):
+        if not os.path.exists(file):  # touch
             with open(file,'w') as f:
-                f.write("\n")
+                f.write("")
         
 
     def __readMap(self):
-        with open(self.cachefile, 'r') as f:
+        with open(self.aliasrc, 'r') as f:
             for line in f:
-                alias, command = line.splitlines().split('\t')
+                alias, command = line.splitlines()[0].split('="')
+
+                alias = alias.split('alias ')[-1]
+                command = command[:-1]                                # last character will always be '"'
                 self.map[alias] = command
+            f.close()
 
 
     def __writeMap(self):
-        with open(self.cachefile, 'w') as f:
+        with open(self.aliasrc, 'w') as f:
             for alias, command in self.map.items():
-                f.write("%s\t%s\n" % (alias, command))
+                f.write('alias %s="%s"\n' % (alias, command))
+            f.close()
 
 
     def insertAlias(self, alias, command):
@@ -42,7 +49,7 @@ class AliasRC:
 
             ans = input().strip()
             if ans[0].lower() == 'y' or len(ans) == 0:
-                self.removeAlias(alias)
+                del self.map[alias]
                 self.insertAlias(alias, command)
                 return 0
 
@@ -53,6 +60,7 @@ class AliasRC:
         self.__writeMap()
         print("Inserted.", file=sys.stderr)
 
+    
     def removeAlias(self, alias, write=False):
         del self.map[alias]
         if write:
@@ -60,11 +68,6 @@ class AliasRC:
         print("Removed", file=sys.stderr)
 
 
-    def updateAlias(self):
-        with open(self.aliasrc, 'w') as f:
-            print("#!/bin/sh", file=f)                                     # probably not neccesary
-            for alias, command in self.map.items():
-                print("alias %s=\"%s\"" % (alias, command), file=f)
 
 
 def _help():
@@ -93,13 +96,9 @@ if __name__ == "__main__":
 
     al = AliasRC()
 
-    if al == "insert":
+    if command == "insert":
         al.insertAlias(alias, alias_command)
-    elif al == "remove":
-        al.removeAlias(alias)
+    elif command == "remove":
+        al.removeAlias(alias, True)
     else:
         _help()
-
-    
-
-    
