@@ -1,7 +1,7 @@
 #!/bin/bash
 
 org(){
-    local org_loc=~/.config/org_git_loc
+    local org_loc=~/.config/org_notes.location
     
     if ! [ -e $org_loc ] || [ "$(cat $org_loc)" = "" ];then
 	echo "Cannot find orgnotes git location. Please set the location in the file:
