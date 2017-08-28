@@ -11,7 +11,7 @@ class AliasRC:
         #self.cachefile = os.path.join(xdg_cache_home, 'alias.map')
         #AliasRC.__filesanity(self.cachefile)
         
-        self.aliasrc = os.path.join(xdg_config_home, 'alias.source')
+        self.aliasrc = os.path.join(xdg_config_home, 'mkalias.source')
         AliasRC.__filesanity(self.aliasrc)
 
         self.map = {}
@@ -58,7 +58,10 @@ class AliasRC:
 
         self.map[alias] = command
         self.__writeMap()
+        
         print("Inserted.", file=sys.stderr)
+        print("alias %s=\"%s\"" % (alias, alias_command))
+
 
     
     def removeAlias(self, alias, write=False):
@@ -67,6 +70,8 @@ class AliasRC:
             if write:
                 self.__writeMap()
             print("Removed", file=sys.stderr)
+            print("unalias %s" % alias)
+
 
         except KeyError:
             print("Unable to find alias:", alias, file=sys.stderr)
@@ -99,10 +104,11 @@ if __name__ == "__main__":
             alias_command = sys.argv[3]
             al.insertAlias(alias, alias_command)
         elif command == "remove":
-            al.removeAlias(alias, True)       
+            al.removeAlias(alias, True)
         else:
             _help()
 
     except IndexError:
         _help()
+
 

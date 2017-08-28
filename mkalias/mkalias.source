@@ -9,14 +9,24 @@ mkalias(){
 
     local alias_bin=$(cat $loc_alias_bin)
 
-    [ "$alias_bin" = "" ] && echo "alias.py not set at: $loc_alias_bin" && return -1
+    [ "$alias_bin" = "" ] && echo "mkalias not set at: $loc_alias_bin" && return -1
 
     # install in profiles if not there
     loc_alias_src=$(readlink -f $loc_alias_src)
     local src_command=". $loc_alias_src"
 
-    [ "`grep -c \"$src_command\" ~/.zshrc`"  != "0" ] && echo "$src_command" >> ~/.zshrc
-    [ "`grep -c \"$src_command\" ~/.bashrc`" != "0" ] && echo "$src_command" >> ~/.bashrc
+    echo "$src_command"
 
-    $alias_bin ${@:1}
+    [ "`grep -c \"$src_command\" ~/.zshrc`"  = "0" ] && echo "$src_command" >> ~/.zshrc
+    [ "`grep -c \"$src_command\" ~/.bashrc`" = "0" ] && echo "$src_command" >> ~/.bashrc
+
+    local out_command=$( $alias_bin ${@:1} )
+
+    # safety
+    case $out_command in
+	"alias "*);&
+	"unalias "*)
+	    eval $out_command;
+	    ;;
+    esac
 }
