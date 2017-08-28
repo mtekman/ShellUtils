@@ -62,10 +62,14 @@ class AliasRC:
 
     
     def removeAlias(self, alias, write=False):
-        del self.map[alias]
-        if write:
-            self.__writeMap()
-        print("Removed", file=sys.stderr)
+        try:
+            del self.map[alias]
+            if write:
+                self.__writeMap()
+            print("Removed", file=sys.stderr)
+
+        except KeyError:
+            print("Unable to find alias:", alias, file=sys.stderr)
 
 
 
@@ -77,9 +81,8 @@ def _help():
     print('''
      %s insert rmf "rm -rf"
  or  %s remove rmf
- or  %s list
 
-An alias management tool that preserves across shells/boots''' % (title, padd, padd),
+An alias management tool that preserves across shells/boots''' % (title, padd),
           file=sys.stderr)
     exit(-1)
 
@@ -87,9 +90,9 @@ An alias management tool that preserves across shells/boots''' % (title, padd, p
 if __name__ == "__main__":
 
     try:
-        command = sys.argv[1]         # insert, remove
-        alias = sys.argv[2]           # red
-        alias_command = sys.argv[3]   # "red -re"
+        command = sys.argv[1]                           # insert, remove
+        alias= sys.argv[2]
+        alias_command = True or sys.argv[3]
 
     except IndexError:
         _help()
@@ -99,6 +102,6 @@ if __name__ == "__main__":
     if command == "insert":
         al.insertAlias(alias, alias_command)
     elif command == "remove":
-        al.removeAlias(alias, True)
+        al.removeAlias(alias, True)       
     else:
         _help()

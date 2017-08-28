@@ -1,11 +1,6 @@
 #!/bin/bash
 
 mkalias(){
-    [ $# = 0 ] && echo "Make persistent aliases
-
-    `basename $0` <alias>[=\"<command>\"] [--delete]
-
-e.g. `basename $0` rmf=\"rm -rf\" " && return -1
 
     local loc_alias_bin=~/.config/mkalias.location
     local loc_alias_src=~/.config/alias.source
