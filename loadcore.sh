@@ -27,7 +27,17 @@ function _getConf(){
     local location="$2"
     local noprompt="$3"
 
-    ! [ -e $location ] && echo "$location does not exist, creating..." && mkdir -p `dirname $location` && touch $location;
+    if ! [ -e $location ]; then
+	echo "$location does not exist, creating..."
+	if ! [ "$location" != "$SHELL_UTILS" ]; then
+	    mkdir -p `dirname $location`
+	    touch $location
+	else
+	    echo Please set SHELL_UTILS location
+	    return 0
+	fi
+	
+    fi
     
     varvalu=`grep "${varname}|||" $location | sed -r 's/[^|]+\|\|\|(.*)/\1/'`
 
