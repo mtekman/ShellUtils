@@ -65,7 +65,7 @@ function shutdown {
 
     if ! [ -e $repo_dir ]; then
 	echo "No repos set in $repo_dir... continuing."
-	echo /usr/bin/shutdown $*
+	/usr/bin/shutdown $*
 	return 
     fi
 
@@ -86,5 +86,5 @@ function shutdown {
 	return
     fi
     
-    echo /usr/bin/shutdown $*    
+    /usr/bin/shutdown $*    
 }
