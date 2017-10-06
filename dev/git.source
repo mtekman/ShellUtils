@@ -15,6 +15,24 @@ alias gpuom="gpu origin master"
 
 # gcmd is sourced already at this point
 
+function git-watch {
+    watch_file=$HOME/.config/repos.watch
+    
+    [ $# != 1 ] && echo -e "\n\t`basename $0` <repo dir> \n\n Adds a repo to watch to $watch_file, which overrides the shutdown command when unstaged changes are detected." && return
+
+    # touch file
+    mkdir -p $(dirname $watch_file)
+    touch $watch_file
+
+    repo=$(readlink -f $1)
+    ! [ -e $repo/.git ] && echo "Could not find a git folder for $repo" && return
+
+    [ "`grep \"$repo\" $watch_file`" != "" ] && echo "$repo already exists" && return
+
+    echo "$repo" >> $watch_file
+    echo "Added $repo to $watch_file"
+}
+
 
 function git-author {
 	[ $# != 2 ] && echo -e "\n\tgit-author <new_author> <new_email>\n\n changes the author of all previous commits" && return
@@ -36,4 +54,37 @@ export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
 ' --tag-name-filter cat -- --branches --tags\
 "
 	eval "$comm1$comm2"
+}
+
+
+
+
+function shutdown {
+    # check tagged repos for unstaged commits
+    repo_dir=$HOME/.config/repos.watch
+
+    if ! [ -e $repo_dir ]; then
+	echo "No repos set in $repo_dir... continuing."
+	echo /usr/bin/shutdown $*
+	return 
+    fi
+
+    repo_list=$(cat $repo_dir)
+
+    # Check
+    unsynced_repos=""
+    for repo in $repo_list; do
+	out=$(git status -s $repo)
+	
+	[ "$out" != "" ] && unsynced_repos=$unsynced_repos"\n$repo"	
+    done
+
+    # warning message
+    if [ "$unsynced_repos" != "" ]; then
+	echo "The following repos have uncommited changes:"
+	echo -e "$unsynced_repos"
+	return
+    fi
+    
+    echo /usr/bin/shutdown $*    
 }
