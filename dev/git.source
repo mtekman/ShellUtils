@@ -69,12 +69,12 @@ function shutdown {
 	return 
     fi
 
-    repo_list=$(cat $repo_dir)
-
     # Check
     unsynced_repos=""
-    for repo in $repo_list; do
-	out=$(git status -s $repo)
+    for repo in $(cat $repo_dir); do
+	cd $repo 2>&1 >/dev/null
+	out=$(git status -s)
+	cd - 2>&1 >/dev/null
 	
 	[ "$out" != "" ] && unsynced_repos=$unsynced_repos"\n$repo"	
     done
