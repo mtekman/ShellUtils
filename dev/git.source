@@ -76,8 +76,8 @@ function sync_repos {
 
     # warning message
     if [ "$unsynced_repos" != "" ]; then
-	echo "The following repos have uncommited changes:"
-	echo -e "$unsynced_repos"
+	echo "The following repos have uncommited changes:" 2>&1
+	echo -e "$unsynced_repos" 2>&1
 	return -1
     fi
 
@@ -86,8 +86,7 @@ function sync_repos {
 
 
 function shutdown {
+    sync_repos
     
-    res=$(sync_repos)
-
-    [ "$res" = "0" ] && /usr/bin/shutdown $*
+    [ $? = 0 ] && /usr/bin/shutdown $*
 }
