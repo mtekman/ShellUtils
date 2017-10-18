@@ -58,8 +58,12 @@ export GIT_AUTHOR_EMAIL=\"\$CORRECT_EMAIL\"
 
 
 function sync_repos {
+
+    local action=$1
+    [ "$action" = "" ] && echo "`basename $0` <action>" && return -1
+    
     repo_dir=$HOME/.config/repos.watch
-    echo $repo_dir
+    #echo $repo_dir
 
     if ! [ -e $repo_dir ]; then
 	echo "No repos set in $repo_dir... continuing." 2>&1
@@ -68,28 +72,31 @@ function sync_repos {
 
     unsynced_repos=""
     for repo in $(cat $repo_dir); do
-        echo $repo
-	cd $repo 2>&1 >/dev/null
-        git pull
-	out=$(git status -s)
-	cd - 2>&1 >/dev/null
 	
-	[ "$out" != "" ] && unsynced_repos=$unsynced_repos"\n$repo"	
-    done
+	! [ -e $repo ] && echo "cannot locate $repo" && continue
+	
+	cd $repo 2>&1 >/dev/null
 
-    # warning message
-    if [ "$unsynced_repos" != "" ]; then
-	echo "The following repos have uncommited changes:" 2>&1
-	echo -e "$unsynced_repos" 2>&1
-	return -1
-    fi
+	case $action in
+	    pull)
+		echo $repo
+		git pull -q
+		;;
+	    status)
+		out=$(git status -s)
+		[ "$out" != "" ] && echo "-> $repo"
+		;;
+	esac
+
+	cd - 2>&1 >/dev/null
+    done
 
     return 0
 }
 
 
 function shutdown {
-    sync_repos
+    sync_repos status
     
     [ $? = 0 ] && /usr/bin/shutdown $*
 }
