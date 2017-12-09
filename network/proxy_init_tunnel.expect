@@ -11,7 +11,7 @@ set sshport [lindex $argv 4]
 
 set salt [ lindex $argv 5 ]
 if {$salt eq ""} {
-	set salt [getsalt "salt: "]
+    set salt [getsalt "salt: "]
 }
 
 
@@ -23,57 +23,54 @@ set count_loop 0
 
 proc init_connect { loop_number } {
 
-	global pid
-	set pid [uplevel #0 spawn ssh -R $::portarg:localhost:$::sshport $::proxy_host -X]
-	set message "You are now logged in for $::timearg mins on port $::portarg \[$loop_number\]"
-	
-	send_user "connecting...\n"
+    global pid
+    set pid [uplevel #0 spawn ssh -R $::portarg:localhost:$::sshport $::proxy_host -X]
+    set message "You are now logged in for $::timearg mins on port $::portarg \[$loop_number\]"
+    set prompt "(%|#|\\\$) $"
+    
+    send_user "connecting...\n"
 
-	#login handles cases:
-	#   login with keys (no user/pass)
-	#   user/pass
-	#   login with keys (first time verification)
-	expect {
-		"% " { send "$message"}
-		"assword: " { 
-			send "$::proxy_pass\n" 
-			expect {
-				"% " { 
-					send_user "$message"
-					expect {
-						timeout {ontimeout " -> catch"}
-					}
-				}
-			}
-		}
-		"(yes/no)? " { 
-			send "yes\n"
-			expect {
-				"assword: " { 
-					send "$::proxy_pass\n" 
-					expect {
-						"% " { 
-							send_user "$message"
-							expect {
-								timeout {ontimeout "catch"}
-							}
-						}
-					}
-				}
-			}
-		}
-		send_user "Login failed\n"
-	}
+    #login handles cases:
+    #   login with keys (no user/pass)
+    #   user/pass
+    #   login with keys (first time verification)
+    expect {
+        "% " { send "$message"}
+        "assword: " { 
+            send "$::proxy_pass\n" 
+            expect -re $prompt {
+                send_user "$message"
+                expect {
+                    timeout {ontimeout " -> catch"}
+                }
+            }
+        }
+        "(yes/no)? " { 
+            send "yes\n"
+            expect {
+                "assword: " { 
+                    send "$::proxy_pass\n" 
+                    expect -re $prompt {
+                        send_user "$message"
+                        expect {
+                            timeout {ontimeout "catch"}
+                        }
+                    }
+                }
+            }
+        }
+        send_user "Login failed\n"
+    }
 }
 
 proc ontimeout { messages } {
-	global count_loop
-	
-	exec kill -9 $::pid
-	sleep 2;
-	send_user "$messages\n"
-	set count_loop [expr {$::count_loop + 1}]
-	init_connect $count_loop
+    global count_loop
+    
+    exec kill -9 $::pid
+    sleep 2;
+    send_user "$messages\n"
+    set count_loop [expr {$::count_loop + 1}]
+    init_connect $count_loop
 }
 
 init_connect $count_loop
