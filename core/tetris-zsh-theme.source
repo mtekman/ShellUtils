@@ -2,7 +2,7 @@
 ## Link this to your oh-my-zsh themes directory, and select it by editing your .zshrc
 ##
 
-if [ "$ZSH" != "" ]; then
+if [ "$ZSH" != "" ] && [ "$ZPREZTODIR" = "" ]; then
 
    local ps_scrn=""
    local host_color=green

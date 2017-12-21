@@ -1,30 +1,32 @@
 #!/bin/bash
 
-ps_end="\$"
-ps_scrn=""
-ps_user=$bldred
-ps_atsy=$txtwht
-ps_text=$txtgrn
+if [ "$SHELL" = "bash" ]; then
 
-# Are we chrooted?
-if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
-	ps_scrn="[chroot]"
-	ps_end=">>"
-	ps_text=$txtylw
-fi
+    ps_end="\$"
+    ps_scrn=""
+    ps_user=$bldred
+    ps_atsy=$txtwht
+    ps_text=$txtgrn
 
-# Are we screened?
-[ "$STY" != "" ]  && ps_scrn="[$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
+    # Are we chrooted?
+    if [ "$(awk '$5=="/" {print $1}' </proc/1/mountinfo)" != "$(awk '$5=="/" {print $1}' </proc/$$/mountinfo)" ]; then
+        ps_scrn="[chroot]"
+        ps_end=">>"
+        ps_text=$txtylw
+    fi
 
-# Are we ssh'd?
-#[ "$SSH_CLIENT" != "" ] && bak=$bakblu && hostcolor=$hostcolor$bak && ps_user=$ps_user$bak && ps_atsy=$ps_atsy$bak
+    # Are we screened?
+    [ "$STY" != "" ]  && ps_scrn="[$(echo $STY | awk -F'.' '{print $NF}' )]" && ps_end="#"
+    
+    # Are we ssh'd?
+    #[ "$SSH_CLIENT" != "" ] && bak=$bakblu && hostcolor=$hostcolor$bak && ps_user=$ps_user$bak && ps_atsy=$ps_atsy$bak
 
-PROMPT_DIRTRIM=0
+    PROMPT_DIRTRIM=0
 
-#PS1=$(tput sc;tput cup 0 0; cols=`tput cols`; form="%$cols"s; format=`printf $form ""`; echo -e "$format\r")\
+    #PS1=$(tput sc;tput cup 0 0; cols=`tput cols`; form="%$cols"s; format=`printf $form ""`; echo -e "$format\r")\
 
-# tput not avaialable everywhere, use the escape codes instead
-PS1=`cols=$(stty size | cut -d" " -f2); form="%$cols"s; format=$(printf $form "");echo -e "\033[s \033[0;0f$format\r"`\
+    # tput not avaialable everywhere, use the escape codes instead
+    PS1=`cols=$(stty size | cut -d" " -f2); form="%$cols"s; format=$(printf $form "");echo -e "\033[s \033[0;0f$format\r"`\
 "\[$ps_scrn\]\
 \[$ps_user\]\
 \u\
@@ -41,3 +43,5 @@ $ps_end \
 \n\
 `echo -e \"\033[u\"`\
 \[$txtgrn\]> \[$txtrst\]"
+
+fi
