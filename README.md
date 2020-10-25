@@ -1,3 +1,7 @@
+### This repo has migrated to GitLab
+https://gitlab.com/mtekman/ShellUtils
+###### (The copy here is archived. Please see the above link for the latest developments)
+
 
 # Shell Utilities #
 
